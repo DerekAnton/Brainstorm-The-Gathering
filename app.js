@@ -6,7 +6,6 @@
 var express = require('express');
 var index = require('./routes/index');
 var user = require('./routes/user');
-var hashfeed = require('./routes/hashfeed');
 var http = require('http');
 var path = require('path');
 
@@ -39,9 +38,6 @@ app.configure('development',
 app.get('/', index.index);
 app.get('/signup', index.signup);
 app.get('/:user/profile', user.profile);
-app.get('/:user/followers', user.followers);
-app.get('/:user/following', user.following);
-app.get('/feed/:hashtag', hashfeed.feed);
 
 http.createServer(app).listen(app.get('port'), 
 	function()
