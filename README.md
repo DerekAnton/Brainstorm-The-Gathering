@@ -6,5 +6,5 @@ Chris Spada
 Matthew Brunelle
 Albert Williams
 Conor Power
-Henery Ellis
+Henry Ellis
 
