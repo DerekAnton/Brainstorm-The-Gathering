@@ -20,14 +20,19 @@ exports.index = function(req, res)
 
 exports.top10cards = function(req,res)
 {
-	navAndFetch(req, res, 'http://www.starcitygames.com/pages/decklists/', 'Nav');
+	var newUrl;
+	navAndFetch(req, res, 'http://www.starcitygames.com/pages/decklists/', 'Nav', function(url){
+		newUrl = url; // using a callback to handle a scoping problem , use a callback function to access the string from navAndFetch
+	}
+	);
+
 };
-var navAndFetch = function(req, res, url, navFetch)
+var navAndFetch = function(req, res, url, navFetch, callback)
 {
 	    request({uri: url}, function(err, response, body)
 	    {
 	      var self = this;
-	      self.items = new Array();//I feel like I want to save my results in an array
+	      self.items = new Array();
 	      if(err && response.statusCode !== 200){console.log('Request error.');}
 	      jsdom.env(
 	   			{
@@ -41,6 +46,7 @@ var navAndFetch = function(req, res, url, navFetch)
 	                res.end($('title').text());
 	                if(navFetch === 'Nav')
 	                {
+	                	callback($('#dynamicpage_standard_list p:nth-child(4) a:first-child').attr('href'));
 	                	console.log($('#dynamicpage_standard_list p:nth-child(4) a:first-child').attr('href'));
 	                }
 	                if(navFetch === 'Fetch')
