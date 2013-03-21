@@ -1,0 +1,14 @@
+<% include template/header.ejs %>
+
+		<h1><%= title %></h1>
+		<p>Welcome to SmallTalk.</p>
+
+		<form method="POST" action="/signin">
+			<input id="username" type="text" name="username" placeholder="Username" /><br>
+			<input id="password" type="password" name="password" placeholder="Password" /><br>
+			<input id="submitButton" type="submit" value="Log In" name="submitButton" class="btn" />
+		</form>
+
+		<a href=/signup > Sign Up Here! </a>
+
+<% include template/footer.ejs %>
