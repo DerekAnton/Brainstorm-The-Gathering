@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block title %}Info {{ card.name }}{% endblock %}
+
+{% block content %}
+      <h1>Card Info - {{card.name}} ({{set}})</h1>
+      <p><p>
+      <img src='/static/card_images/{{set}}/{{card.name}}.jpeg'>
+      <p>Color: {{card.color}}</p>
+      <p>Manacost: {{card.manacost}}</p> (CMC: {{ card.cmc }})
+      <p>Power: {{card.power}}</p>
+      <p>Toughness: {{card.toughness}}</p>
+      <p>"{{card.flavor}}"</p>
+
+{% endblock %}
