@@ -66,7 +66,23 @@ class Deck(models.Model):
             card = self.card_counts.get(card=Card.objects.get(name=str))
             card.multiplicity = card.multiplicity + 1
     def removeCard(self, str): #argument is the name of the card to add
-        self.card_counts.get(card=Card.objects.get(name=str)).delete()
+        if(self.card_counts.filter(card=Card.objects.get(name=str)).len() != 0):
+            self.card_counts.get(card=Card.objects.get(name=str)).delete()
+    def setNumCard(self, str, num):
+        if (num <= 0):
+            if(self.card_counts.filter(card=Card.objects.get(name=str)).len() != 0):
+                self.card_counts.get(card=Card.objects.get(name=str)).delete()
+        else:
+            if(self.card_counts.filter(card=Card.objects.get(name=str)).len() == 0):
+                if (CardCount.objects.filter(card=Card.objects.get(name=str)).filter(multiplicity=num).len() == 0):
+                    card = CardCount(card=Card.objects.get(name=str),multiplicity=num)
+                    card.save()
+                    self.card_counts.add(card)
+                else:
+                    self.card_counts.add(CardCount.objects.filter(card=Card.objects.get(name=str)).get(multiplicity=num))
+            else:
+                card = self.card_counts.get(card=Card.objects.get(name=str))
+                card.multiplicity = num
 
 class PublishedDeck(models.Model):
     user = models.ForeignKey(User)
