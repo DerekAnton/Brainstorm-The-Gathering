@@ -54,6 +54,19 @@ class Deck(models.Model):
     created = models.BooleanField()
     description = models.TextField()
     card_counts = models.ManyToManyField('mainsite.CardCount')
+    def addCard(self, str):  #argument is the name of the card to add
+        if(self.card_counts.filter(card=Card.objects.get(name=str)).len() == 0):
+            if (CardCount.objects.filter(card=Card.objects.get(name=str)).filter(multiplicity=1).len() == 0):
+                card = CardCount(card=Card.objects.get(name=str),multiplicity=1)
+                card.save()
+                self.card_counts.add(card)
+            else:
+                self.card_counts.add(CardCount.objects.filter(card=Card.objects.get(name=str)).get(multiplicity=1))
+        else:
+            card = self.card_counts.get(card=Card.objects.get(name=str))
+            card.multiplicity = card.multiplicity + 1
+    def removeCard(self, str): #argument is the name of the card to add
+        self.card_counts.get(card=Card.objects.get(name=str)).delete()
 
 class PublishedDeck(models.Model):
     user = models.ForeignKey(User)
