@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<formats>
+	<legacy>
+		<sets>
+			<set>
+				<name>all</name>
+			</set>
+		</sets>
+		<banned>
+			<card>
+				<name>Amulet of Quoz</name>
+			</card>
+			<card>
+				<name>Ancestral Recall</name>
+			</card>
+			<card>
+				<name>Balance</name>
+			</card>
+			<card>
+				<name>Bazaar of Baghdad</name>
+			</card>
+			<card>
+				<name>Black Lotus</name>
+			</card>
+			<card>
+				<name>Black Vise</name>
+			</card>
+			<card>
+				<name>Bronze Tablet</name>
+			</card>
+			<card>
+				<name>Channel</name>
+			</card>
+			<card>
+				<name>Chaos Orb</name>
+			</card>
+			<card>
+				<name>Contract from Below</name>
+			</card>
+			<card>
+				<name>Darkpact</name>
+			</card>
+			<card>
+				<name>Demonic Attorney</name>
+			</card>
+			<card>
+				<name>Demonic Consultation</name>
+			</card>
+			<card>
+				<name>Demonic Tutor</name>
+			</card>
+			<card>
+				<name>Earthcraft</name>
+			</card>
+			<card>
+				<name>Falling Star</name>
+			</card>
+			<card>
+				<name>Fastbond</name>
+			</card>
+			<card>
+				<name>Flash</name>
+			</card>
+			<card>
+				<name>Frantic Search</name>
+			</card>
+			<card>
+				<name>Goblin Recruiter</name>
+			</card>
+			<card>
+				<name>Gush</name>
+			</card>
+			<card>
+				<name>Hermit Druid</name>
+			</card>
+			<card>
+				<name>Imperial Seal</name>
+			</card>
+			<card>
+				<name>Jeweled Bird</name>
+			</card>
+			<card>
+				<name>Library of Alexandria</name>
+			</card>
+			<card>
+				<name>Mana Crypt</name>
+			</card>
+			<card>
+				<name>Mana Drain</name>
+			</card>
+			<card>
+				<name>Mana Vault</name>
+			</card>
+			<card>
+				<name>Memory Jar</name>
+			</card>
+			<card>
+				<name>Mental Misstep</name>
+			</card>
+			<card>
+				<name>Mind Twist</name>
+			</card>
+			<card>
+				<name>Mind's Desire</name>
+			</card>
+			<card>
+				<name>Mishra's Workshop</name>
+			</card>
+			<card>
+				<name>Mox Emerald</name>
+			</card>
+			<card>
+				<name>Mox Jet</name>
+			</card>
+			<card>
+				<name>Mox Pearl</name>
+			</card>
+			<card>
+				<name>Mox Ruby</name>
+			</card>
+			<card>
+				<name>Mox Sapphire</name>
+			</card>
+			<card>
+				<name>Mystical Tutor</name>
+			</card>
+			<card>
+				<name>Necropotence</name>
+			</card>
+			<card>
+				<name>Oath of Druids</name>
+			</card>
+			<card>
+				<name>Rebirthm</name>
+			</card>
+			<card>
+				<name>Shahrazad</name>
+			</card>
+			<card>
+				<name>Skullclamp</name>
+			</card>
+			<card>
+				<name>Sol Ring</name>
+			</card>
+			<card>
+				<name>Strip Mine</name>
+			</card>
+			<card>
+				<name>Survival of the Fittest</name>
+			</card>
+			<card>
+				<name>Tempest Efreet</name>
+			</card>
+			<card>
+				<name>Time Vault</name>
+			</card>
+			<card>
+				<name>Time Walk</name>
+			</card>
+			<card>
+				<name>Timetwister</name>
+			</card>
+			<card>
+				<name>Timmerian Fiends</name>
+			</card>
+			<card>
+				<name>Tinker</name>
+			</card>
+			<card>
+				<name>Tolarian Academy</name>
+			</card>
+			<card>
+				<name>Vampiric Tutor</name>
+			</card>
+			<card>
+				<name>Wheel of Fortune</name>
+			</card>
+			<card>
+				<name>Windfall</name>
+			</card>
+			<card>
+				<name>Worldgorger Dragon</name>
+			</card>
+			<card>
+				<name>Yawgmoth's Bargain</name>
+			</card>
+			<card>
+				<name>Yawgmoth's Will</name>
+			</card>
+		</banned>
+		<restricted>
+		</restricted>
+	</legacy>
+    <vintage>
+		<sets>
+			<set>
+				<name>all</name>
+			</set>
+		</sets>
+		<banned>
+			<card>
+				<name>Amulet of Quoz</name>
+			</card>
+			<card>
+				<name>Bronze Tablet</name>
+			</card>
+			<card>
+				<name>Chaos Orb</name>
+			</card>
+			<card>
+				<name>Contract from Below</name>
+			</card>
+			<card>
+				<name>Darkpact</name>
+			</card>
+			<card>
+				<name>Demonic Attorney</name>
+			</card>
+			<card>
+				<name>Falling Star</name>
+			</card>
+			<card>
+				<name>Jeweled Bird</name>
+			</card>
+			<card>
+				<name>Rebirth</name>
+			</card>
+			<card>
+				<name>Shahrazad</name>
+			</card>
+			<card>
+				<name>Tempest Efreet</name>
+			</card>
+			<card>
+				<name>Timmerian Fiends</name>
+			</card>
+		</banned>
+		<restricted>
+			<card>
+				<name>Ancestral Recall</name>
+			</card>
+			<card>
+				<name>Balance</name>
+			</card>
+			<card>
+				<name>Black Lotus</name>
+			</card>
+			<card>
+				<name>Brainstorm</name>
+			</card>
+			<card>
+				<name>Channel</name>
+			</card>
+			<card>
+				<name>Demonic Consultation</name>
+			</card>
+			<card>
+				<name>Demonic Tutor</name>
+			</card>
+			<card>
+				<name>Fastbond</name>
+			</card>
+			<card>
+				<name>Flash</name>
+			</card>
+			<card>
+				<name>Gifts Ungiven</name>
+			</card>
+			<card>
+				<name>Imperial Seal</name>
+			</card>
+			<card>
+				<name>Library of Alexandria</name>
+			</card>
+			<card>
+				<name>Lion’s Eye Diamond</name>
+			</card>
+			<card>
+				<name>Lotus Petal</name>
+			</card>
+			<card>
+				<name>Mana Crypt</name>
+			</card>
+			<card>
+				<name>Mana Vault</name>
+			</card>
+			<card>
+				<name>Memory Jar</name>
+			</card>
+			<card>
+				<name>Merchant Scroll</name>
+			</card>
+			<card>
+				<name>Mind’s Desire</name>
+			</card>
+			<card>
+				<name>Mox Emerald</name>
+			</card>
+			<card>
+				<name>Mox Jet</name>
+			</card>
+			<card>
+				<name>Mox Pearl</name>
+			</card>
+			<card>
+				<name>Mox Ruby</name>
+			</card>
+			<card>
+				<name>Mox Sapphire</name>
+			</card>
+			<card>
+				<name>Mystical Tutor</name>
+			</card>
+			<card>
+				<name>Necropotence</name>
+			</card>
+			<card>
+				<name>Ponder</name>
+			</card>
+			<card>
+				<name>Regrowth</name>
+			</card>
+			<card>
+				<name>Sol Ring</name>
+			</card>
+			<card>
+				<name>Strip Mine</name>
+			</card>
+			<card>
+				<name>Thirst for Knowledge</name>
+			</card>
+			<card>
+				<name>Time Vault</name>
+			</card>
+			<card>
+				<name>Time Walk</name>
+			</card>
+			<card>
+				<name>Timetwister</name>
+			</card>
+			<card>
+				<name>Tinker</name>
+			</card>
+			<card>
+				<name>Tolarian Academy</name>
+			</card>
+			<card>
+				<name>Trinisphere</name>
+			</card>
+			<card>
+				<name>Vampiric Tutor</name>
+			</card>
+			<card>
+				<name>Wheel of Fortune</name>
+			</card>
+			<card>
+				<name>Windfall</name>
+			</card>
+			<card>
+				<name>Yawgmoth’s Bargain</name>
+			</card>
+			<card>
+				<name>Yawgmoth’s Will</name>
+			</card>
+		</restricted>
+	</vintage>
+    <modern>
+		<sets>
+			<set>
+				<name>Eighth Edition</name>
+			</set>
+			<set>
+				<name>Mirrodin</name>
+			</set>
+			<set>
+				<name>Darksteel</name>
+			</set>
+			<set>
+				<name>Fifth Dawn</name>
+			</set>
+			<set>
+				<name>Champions of Kamigawa</name>
+			</set>
+			<set>
+				<name>Betrayers of Kamigawa</name>
+			</set>
+			<set>
+				<name>Saviors of Kamigawa</name>
+			</set>
+			<set>
+				<name>Ninth Edition</name>
+			</set>
+			<set>
+				<name>Ravnica: City of Guilds</name>
+			</set>
+			<set>
+				<name>Guildpact</name>
+			</set>
+			<set>
+				<name>Dissension</name>
+			</set>
+			<set>
+				<name>Coldsnap</name>
+			</set>
+			<set>
+				<name>Time Spiral</name>
+			</set>
+			<set>
+				<name>Planar Chaos</name>
+			</set>
+			<set>
+				<name>Future Sight</name>
+			</set>
+			<set>
+				<name>Tenth Edition</name>
+			</set>
+			<set>
+				<name>Lorwyn</name>
+			</set>
+			<set>
+				<name>Morningtide</name>
+			</set>
+			<set>
+				<name>Shadowmoor</name>
+			</set>
+			<set>
+				<name>Eventide</name>
+			</set>
+			<set>
+				<name>Shards of Alara</name>
+			</set>
+			<set>
+				<name>Conflux</name>
+			</set>
+			<set>
+				<name>Alara Reborn</name>
+			</set>
+			<set>
+				<name>Magic 2010</name>
+			</set>
+			<set>
+				<name>Zendikar</name>
+			</set>
+			<set>
+				<name>Worldwake</name>
+			</set>
+			<set>
+				<name>Rise of the Eldrazi</name>
+			</set>
+			<set>
+				<name>Magic 2011</name>
+			</set>
+			<set>
+				<name>Scars of Mirrodin</name>
+			</set>
+			<set>
+				<name>Mirrodin Besieged</name>
+			</set>
+			<set>
+				<name>New Phyrexia</name>
+			</set>
+			<set>
+				<name>Magic 2012</name>
+			</set>
+			<set>
+				<name>Innistrad</name>
+			</set>
+			<set>
+				<name>Dark Ascension</name>
+			</set>
+			<set>
+				<name>Avacyn Restored</name>
+			</set>
+			<set>
+				<name>Magic 2013</name>
+			</set>
+			<set>
+				<name>Return to Ravnica</name>
+			</set>
+			<set>
+				<name>Gatecrash</name>
+			</set>
+		</sets>
+		<banned>
+			<card>
+				<name>Ancestral Vision</name>
+			</card>
+			<card>
+				<name>Ancient Den</name>
+			</card>
+			<card>
+				<name>Bitterblossom</name>
+			</card>
+			<card>
+				<name>Blazing Shoal</name>
+			</card>
+			<card>
+				<name>Bloodbraid Elf</name>
+			</card>
+			<card>
+				<name>Chrome Mox</name>
+			</card>
+			<card>
+				<name>Cloudpost</name>
+			</card>
+			<card>
+				<name>Dark Depths</name>
+			</card>
+			<card>
+				<name>Dread Return</name>
+			</card>
+			<card>
+				<name>Glimpse of Nature</name>
+			</card>
+			<card>
+				<name>Golgari Grave-Troll</name>
+			</card>
+			<card>
+				<name>Great Furnace</name>
+			</card>
+			<card>
+				<name>Green Sun's Zenith</name>
+			</card>
+			<card>
+				<name>Hypergenesis</name>
+			</card>
+			<card>
+				<name>Jace, the Mind Sculptor</name>
+			</card>
+			<card>
+				<name>Mental Misstep</name>
+			</card>
+			<card>
+				<name>Ponder</name>
+			</card>
+			<card>
+				<name>Preordain</name>
+			</card>
+			<card>
+				<name>Punishing Fire</name>
+			</card>
+			<card>
+				<name>Rite of Flame</name>
+			</card>
+			<card>
+				<name>Seat of the Synod</name>
+			</card>
+			<card>
+				<name>Seething Song</name>
+			</card>
+			<card>
+				<name>Sensei's Divining Top</name>
+			</card>
+			<card>
+				<name>Stoneforge Mystic</name>
+			</card>
+			<card>
+				<name>Skullclamp</name>
+			</card>
+			<card>
+				<name>Sword of the Meek</name>
+			</card>
+			<card>
+				<name>Tree of Tales</name>
+			</card>
+			<card>
+				<name>Umezawa's Jitte</name>
+			</card>
+			<card>
+				<name>Vault of Whispers</name>
+			</card>
+			<card>
+				<name>Wild Nacatl</name>
+			</card>
+		</banned>
+		<restricted>
+		</restricted>
+	</modern>
+    <standard>
+		<sets>
+			<set>
+				<name>Innistrad</name>
+			</set>
+			<set>
+				<name>Dark Ascension</name>
+			</set>
+			<set>
+				<name>Avacyn Restored</name>
+			</set>
+			<set>
+				<name>Magic 2013</name>
+			</set>
+			<set>
+				<name>Return to Ravnica</name>
+			</set>
+			<set>
+				<name>Gatecrash</name>
+			</set>
+		</sets>
+		<banned>
+		</banned>
+		<restricted>
+		</restricted>
+	</standard>
+    <commander>
+		<sets>
+			<set>
+				<name>all</name>
+			</set>
+		</sets>
+		<banned>
+			<card>
+				<name>Ancestral Recall</name>
+			</card>
+			<card>
+				<name>Balance</name>
+			</card>
+			<card>
+				<name>Biorhythm</name>
+			</card>
+			<card>
+				<name>Black Lotus</name>
+			</card>
+			<card>
+				<name>Channel</name>
+			</card>
+			<card>
+				<name>Coalition Victory</name>
+			</card>
+			<card>
+				<name>Emrakul, the Aeons Torn</name>
+			</card>
+			<card>
+				<name>Fastbond</name>
+			</card>
+			<card>
+				<name>Gifts Ungiven</name>
+			</card>
+			<card>
+				<name>Griselbrand</name>
+			</card>
+			<card>
+				<name>Karakas</name>
+			</card>
+			<card>
+				<name>Library of Alexandria</name>
+			</card>
+			<card>
+				<name>Limited Resources</name>
+			</card>
+			<card>
+				<name>Metalworker</name>
+			</card>
+			<card>
+				<name>Mox Emerald</name>
+			</card>
+			<card>
+				<name>Mox Jet</name>
+			</card>
+			<card>
+				<name>Mox Pearl</name>
+			</card>
+			<card>
+				<name>Mox Ruby</name>
+			</card>
+			<card>
+				<name>Mox Sapphire</name>
+			</card>
+			<card>
+				<name>Painter's Servant</name>
+			</card>
+			<card>
+				<name>Panoptic Mirror</name>
+			</card>
+			<card>
+				<name>Primeval Titan</name>
+			</card>
+			<card>
+				<name>Protean Hulk</name>
+			</card>
+			<card>
+				<name>Recurring Nightmare</name>
+			</card>
+			<card>
+				<name>Staff of Domination</name>
+			</card>
+			<card>
+				<name>Sundering Titan</name>
+			</card>
+			<card>
+				<name>Sway of the Stars</name>
+			</card>
+			<card>
+				<name>Time Vault</name>
+			</card>
+			<card>
+				<name>Time Walk</name>
+			</card>
+			<card>
+				<name>Tinker</name>
+			</card>
+			<card>
+				<name>Tolarian Academy</name>
+			</card>
+			<card>
+				<name>Upheaval</name>
+			</card>
+			<card>
+				<name>Worldfire</name>
+			</card>
+			<card>
+				<name>Yawgmoth's Bargain</name>
+			</card>
+		</banned>
+		<restricted>
+			<card>
+				<name>singleton</name>
+			</card>
+		</restricted>
+</formats>
