@@ -1,5 +1,4 @@
 # Django settings for brainstormtg project.
-import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -9,6 +8,8 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+import os 
 
 try:
     DATABASES = {
@@ -23,13 +24,9 @@ try:
     }
 except KeyError:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'developement.db',                      # Or path to database file if using sqlite3.
-            'USER': '',                      # Not used with sqlite3.
-            'PASSWORD': '',                  # Not used with sqlite3.
-            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'default':{
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'developement.db'
         }
     }
 
@@ -39,10 +36,6 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-
-# Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -91,7 +84,6 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '/mainsite/static'), 
 )
 
 # List of finder classes that know how to find static files in
@@ -103,7 +95,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'vk08x_88s8^^xcj#x%5ztl&amp;!hz(ol8ty17xj*uvha9iuslj#67'
+SECRET_KEY = '5^pp#b#(9e5_wbtz%@w)0thppzq=7l8q_c4nlw^t$6cbxsxj!v'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from mainsite.models import Card
+from bs4 import BeautifulSoup
+import requests
 
 def index(request):
     return render_to_response('base.html', {'user': request.user})
@@ -44,3 +46,11 @@ def card_info(request, card_name, set_name):
         card = Card.objects.get(name__iexact=card_name)
         _set = card.sets.all()[0]
         return render_to_response('card_info.html', {'card': card, 'set': _set,'user':request.user})
+
+def top_decks(request):
+    r = requests.get("http://www.starcitygames.com/pages/decklists/")
+    soup = BeautifulSoup(r.text)
+
+    top = soup.find('div', id="dynamicpage_standard_list").findAll('p')[0].a['href']
+    
+    return HttpResponse(BeautifulSoup(requests.get(top).text).find('section', id="content").table)

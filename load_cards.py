@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from django.core.management import setup_environ
 import os
 import brainstormtg.settings

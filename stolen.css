@@ -1,0 +1,51 @@
+.deckdbbody_row {
+	background-color:#ededed;
+	height:60px;
+	vertical-align:middle;
+	font-size:12px;
+	font-family: 'Open Sans', sans-serif !important;
+}
+.deckdbbody2_row {
+	background-color:#fff;
+	height:60px;
+	vertical-align:middle;
+	font-size:12px;
+	font-family: 'Open Sans', sans-serif !important;
+}
+.deckdbbody2 {
+	background-color:#fff;
+	height:60px;
+	vertical-align:middle;
+	border-top:1px solid #a9a9a9;
+	font-size:12px;
+	font-family: 'Open Sans', sans-serif !important;
+}
+.deckdbbody {
+	background-color:#ededed;
+	height:60px;
+	vertical-align:middle;
+	border-top:1px solid #a9a9a9;
+	font-size:12px;
+	font-family: 'Open Sans', sans-serif !important;
+}
+.deckdbbody2_notop {
+	background-color:#fff;
+	height:60px;
+	vertical-align:middle;
+	font-size:12px;
+	font-family: 'Open Sans', sans-serif !important;
+}
+.deckdbbody_notop {
+	background-color:#ededed;
+	height:60px;
+	vertical-align:middle;
+	font-size:12px;
+	font-family: 'Open Sans', sans-serif !important;
+}
+.deckdbheader {
+	font-size:14px;
+	font-family: 'Open Sans', sans-serif !important;
+	vertical-align:middle;
+	height:36px;
+	font-weight:300;
+}
