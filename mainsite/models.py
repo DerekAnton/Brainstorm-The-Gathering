@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class FavoriteCard(models.Model):
     card = models.ForeignKey('mainsite.Card')
-    user = models.OneToOneField('User')
+    user = models.OneToOneField(User)
 
 class Card(models.Model):
     name = models.CharField(max_length=200)
@@ -61,7 +61,7 @@ class CardCount(models.Model):
     multiplicity = models.IntegerField()
 
 class Deck(models.Model):
-    user = models.ForeignKey('User')
+    user = models.ForeignKey(User)
     created = models.DateTimeField('datetime.now()')
     description = models.TextField()
     card_counts = models.ManyToManyField('mainsite.CardCount')
@@ -109,6 +109,11 @@ class PublishedDeck(models.Model):
     description = models.TextField()
     card_counts = models.ManyToManyField('mainsite.CardCount')
 
+    def pull_deck(self, newUser):
+        ownedDeck = Deck(user=newUser,created=datetime.now(),description=self.description,card_counts=self.card_counts.objects.all())
+        ownedDeck.save()
+        return ownedDeck
+
 class Collection(models.Model):
     user = models.ForeignKey(User)
     cards = models.ManyToManyField('mainsite.Card')
@@ -144,7 +149,6 @@ class Collection(models.Model):
             else:
                 card = self.card_counts.get(card=Card.objects.get(name=str))
                 card.multiplicity = num
-
 
 class Comment(models.Model):
     user = models.ForeignKey(User)

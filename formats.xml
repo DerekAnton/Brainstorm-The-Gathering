@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <formats>
 	<legacy>
+		<format_name>legacy</format_name>
 		<sets>
 			<set>
 				<name>all</name>
@@ -192,6 +193,7 @@
 		</restricted>
 	</legacy>
     <vintage>
+    	<format_name>vintage</format_name>
 		<sets>
 			<set>
 				<name>all</name>
@@ -365,6 +367,7 @@
 		</restricted>
 	</vintage>
     <modern>
+    	<format_name>modern</format_name>
 		<sets>
 			<set>
 				<name>Eighth Edition</name>
@@ -577,6 +580,7 @@
 		</restricted>
 	</modern>
     <standard>
+    	<format_name>standard</format_name>
 		<sets>
 			<set>
 				<name>Innistrad</name>
@@ -603,6 +607,7 @@
 		</restricted>
 	</standard>
     <commander>
+    	<format_name>commander</format_name>
 		<sets>
 			<set>
 				<name>all</name>

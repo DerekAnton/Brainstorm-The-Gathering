@@ -82,3 +82,23 @@ standard = tree.find('standard')
 commander = tree.find('commander')
 formats = [legacy, vintage, modern, standard, commander]
 
+for _format in formats:
+    newFormat = Format(name=_format.find('formatname').text)
+    newFormat.save()
+    if _format.find('sets').find('set').find('name').text == 'all':
+        for _set in Set.objects.all():
+            newFormat.legal_sets.add(Set.objects.get(name=_set.name))
+    else:
+        for _set in _format.find('sets').findall('set'):
+            newFormat.legal_sets.add(Set.objects.get(name=_set.find('name').text))
+    newFormat.save()
+    for _card in _format.find('banned').findall('card'):
+        newFormat.banned_cards.add(Card.objects.get(name=_card.find('name').text))
+    newFormat.save()
+    if _format.find('restricted').find('card').find('name').text == 'singleton':
+        for _card in Card.objects.all():
+            newFormat.restricted_cards.add(Card.objects.get(name=_card.name))
+    else:
+        for _card in _format.find('restricted').findall('card'):
+            newFormat.restricted_cards.add(Card.objects.get(name=_card.find('name').text))
+    newFormat.save();
