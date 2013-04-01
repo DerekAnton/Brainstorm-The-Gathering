@@ -1,6 +1,11 @@
 from django.db import models
+from datetime import datetime
 
 from django.contrib.auth.models import User
+
+class FavoriteCard(models.Model):
+    card = models.ForeignKey('mainsite.Card')
+    user = models.OneToOneField('User')
 
 class Card(models.Model):
     name = models.CharField(max_length=200)
@@ -19,6 +24,12 @@ class Card(models.Model):
 
     def get_absolute_url(self):
         return "/info/%s/%s/" % (self.sets.all()[0], self.name)
+
+class Format(models.Model):
+    name = models.CharField(max_length=200)
+    legal_sets = models.ManyToManyField('mainsite.Set')
+    banned_cards = models.ManyToManyField('mainsite.Card')
+    restricted_cards = models.ManyToManyField('mainsite.Card')
 
 class Set(models.Model):
     name = models.CharField(max_length=200)
@@ -50,10 +61,16 @@ class CardCount(models.Model):
     multiplicity = models.IntegerField()
 
 class Deck(models.Model):
-    user = models.ForeignKey(User)
-    created = models.BooleanField()
+    user = models.ForeignKey('User')
+    created = models.DateTimeField('datetime.now()')
     description = models.TextField()
     card_counts = models.ManyToManyField('mainsite.CardCount')
+
+    def publish(self):
+        publishedDeck = PublishedDeck(user=self.user,published=datetime.now(),description=self.description,card_counts=self.card_counts.objects.all())
+        publishedDeck.save()
+        return publishedDeck
+
     def addCard(self, str):  #argument is the name of the card to add
         if(self.card_counts.filter(card=Card.objects.get(name=str)).len() == 0):
             if (CardCount.objects.filter(card=Card.objects.get(name=str)).filter(multiplicity=1).len() == 0):
@@ -65,9 +82,11 @@ class Deck(models.Model):
         else:
             card = self.card_counts.get(card=Card.objects.get(name=str))
             card.multiplicity = card.multiplicity + 1
+
     def removeCard(self, str): #argument is the name of the card to add
         if(self.card_counts.filter(card=Card.objects.get(name=str)).len() != 0):
             self.card_counts.get(card=Card.objects.get(name=str)).delete()
+
     def setNumCard(self, str, num):
         if (num <= 0):
             if(self.card_counts.filter(card=Card.objects.get(name=str)).len() != 0):
@@ -86,7 +105,7 @@ class Deck(models.Model):
 
 class PublishedDeck(models.Model):
     user = models.ForeignKey(User)
-    published = models.BooleanField()
+    published = models.DateTimeField()
     description = models.TextField()
     card_counts = models.ManyToManyField('mainsite.CardCount')
 
@@ -104,9 +123,11 @@ class Collection(models.Model):
         else:
             card = self.card_counts.get(card=Card.objects.get(name=str))
             card.multiplicity = card.multiplicity + 1
+
     def removeCard(self, str): #argument is the name of the card to add
         if(self.card_counts.filter(card=Card.objects.get(name=str)).len() != 0):
             self.card_counts.get(card=Card.objects.get(name=str)).delete()
+
     def setNumCard(self, str, num):
         if (num <= 0):
             if(self.card_counts.filter(card=Card.objects.get(name=str)).len() != 0):

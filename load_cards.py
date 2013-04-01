@@ -4,7 +4,7 @@ from django.core.management import setup_environ
 import os
 import brainstormtg.settings
 setup_environ(brainstormtg.settings)
-from mainsite.models import Card, Set, Typing, SubTyping, SuperTyping
+from mainsite.models import Card, Set, Typing, SubTyping, SuperTyping, Format
 
 import xml.etree.ElementTree as ET
 tree = ET.parse(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cards.xml'))
@@ -72,3 +72,13 @@ for card in cards:
         new_card.super_typing.add(SuperTyping.objects.get_or_create(name=s)[0])
     for s in sub_typing:
         new_card.sub_typing.add(SubTyping.objects.get_or_create(name=s)[0])
+
+
+tree = ET.parse(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'formats.xml'))
+legacy = tree.find('legacy')
+vintage = tree.find('vintage')
+modern = tree.find('modern')
+standard = tree.find('standard')
+commander = tree.find('commander')
+formats = [legacy, vintage, modern, standard, commander]
+
