@@ -40,13 +40,13 @@ def decks(request):
     addCard = request.GET.get('addCard')
     removeCard = request.GET.get('removeCard')
     new = request.GET.get('new')
+    publish = request.GET.get('publish')
     if new:
         new = Deck(name=new,user=request.user,created=datetime.now(),description='')
         new.save()
         deck = None
     elif selected:
         deck = Deck.objects.all().get(pk=selected)
-        
         if addCard:
             card = Card.objects.all().get(pk=addCard)
             if deck.card_counts.filter(card=card):
@@ -64,7 +64,13 @@ def decks(request):
                 count.save()
             else:
                 deck.card_counts.remove(count)
-
+        elif publish:
+            new = PublishedDeck(name=deck.name,user=request.user,published=datetime.now(),description='',score=0)
+            new.save()
+            for count in deck.card_counts.all():
+                count.pk = None
+                count.save()
+                new.card_counts.add(count)
 
     else:
         deck = None
