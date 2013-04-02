@@ -4,7 +4,7 @@ from django.core.management import setup_environ
 import os
 import brainstormtg.settings
 setup_environ(brainstormtg.settings)
-from mainsite.models import Card, Set, Typing, SubTyping, SuperTyping
+from mainsite.models import Card, Set, Typing, SubTyping, SuperTyping, Format
 
 import xml.etree.ElementTree as ET
 tree = ET.parse(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cards.xml'))
@@ -53,11 +53,11 @@ for card in cards:
         super_typing = []
         sub_typing = []
     try:
-        flavor = card.find('text').text.encode('ascii', 'ignore')
+        rules = card.find('text').text.encode('ascii', 'ignore')
     except AttributeError:
-        flavor = ''
+        rules = ''
     manacost = card.find('manacost').text
-    new_card = Card(name=name,color=color,manacost=manacost,flavor=flavor,power=power,toughness=toughness)
+    new_card = Card(name=name,color=color,manacost=manacost,rules=rules,power=power,toughness=toughness)
     new_card.save()
     for s in card.findall('set'):
         _set = s.text
@@ -72,3 +72,33 @@ for card in cards:
         new_card.super_typing.add(SuperTyping.objects.get_or_create(name=s)[0])
     for s in sub_typing:
         new_card.sub_typing.add(SubTyping.objects.get_or_create(name=s)[0])
+
+
+tree = ET.parse(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'formats.xml'))
+legacy = tree.find('legacy')
+vintage = tree.find('vintage')
+modern = tree.find('modern')
+standard = tree.find('standard')
+commander = tree.find('commander')
+formats = [legacy, vintage, modern, standard, commander]
+
+for _format in formats:
+    newFormat = Format(name=_format.find('formatname').text)
+    newFormat.save()
+    if _format.find('sets').find('set').find('name').text == 'all':
+        for _set in Set.objects.all():
+            newFormat.legal_sets.add(Set.objects.get(name=_set.name))
+    else:
+        for _set in _format.find('sets').findall('set'):
+            newFormat.legal_sets.add(Set.objects.get(name=_set.find('name').text))
+    newFormat.save()
+    for _card in _format.find('banned').findall('card'):
+        newFormat.banned_cards.add(Card.objects.get(name=_card.find('name').text))
+    newFormat.save()
+    if _format.find('restricted').find('card').find('name').text == 'singleton':
+        for _card in Card.objects.all():
+            newFormat.restricted_cards.add(Card.objects.get(name=_card.name))
+    else:
+        for _card in _format.find('restricted').findall('card'):
+            newFormat.restricted_cards.add(Card.objects.get(name=_card.find('name').text))
+    newFormat.save();
