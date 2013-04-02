@@ -83,7 +83,7 @@ commander = tree.find('commander')
 formats = [legacy, vintage, modern, standard, commander]
 
 for _format in formats:
-    newFormat = Format(name=_format.find('formatname').text)
+    newFormat = FormatLegality(name=_format.find('formatname').text)
     newFormat.save()
     if _format.find('sets').find('set').find('name').text == 'all':
         for _set in Set.objects.all():
