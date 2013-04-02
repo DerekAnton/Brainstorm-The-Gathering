@@ -33,21 +33,35 @@
 
 
 <script>
+var selectedCard;
+
+var selectedDeck;
+
+var searchedCard =  $("searchText").text();
+
+
+
 
 function addCard()
 {
-
+<!-- selectedDeck.addCard(selectedCard) -->
 }
 
 function removeCard()
 {
-
+<!-- selectedDeck.removeCard(selectedCard) -->
 }
 
 function publishDeck()
 {
+<!-- selectedDeck.Publish() -->
+}
+
+function cardSearch()
+{
 
 }
+
 
 
 </script>
