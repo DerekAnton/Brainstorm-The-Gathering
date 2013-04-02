@@ -53,11 +53,11 @@ for card in cards:
         super_typing = []
         sub_typing = []
     try:
-        flavor = card.find('text').text.encode('ascii', 'ignore')
+        rules = card.find('text').text.encode('ascii', 'ignore')
     except AttributeError:
-        flavor = ''
+        rules = ''
     manacost = card.find('manacost').text
-    new_card = Card(name=name,color=color,manacost=manacost,flavor=flavor,power=power,toughness=toughness)
+    new_card = Card(name=name,color=color,manacost=manacost,rules=rules,power=power,toughness=toughness)
     new_card.save()
     for s in card.findall('set'):
         _set = s.text
