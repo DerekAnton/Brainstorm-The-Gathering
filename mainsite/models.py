@@ -67,7 +67,7 @@ class Deck(models.Model):
     card_counts = models.ManyToManyField('mainsite.CardCount')
 
     def publish(self):
-        publishedDeck = PublishedDeck(user=self.user,published=datetime.now(),description=self.description,card_counts=self.card_counts.objects.all())
+        publishedDeck = PublishedDeck(legacy_legal=self.format_check(Format.objects.get(name=legacy)),vintage_legal=self.format_check(Format.objects.get(name=vintage)),modern_legal=self.format_check(Format.objects.get(name=modern)),standard_legal=self.format_check(Format.objects.get(name=standard)),commander_legal=self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(),description=self.description,card_counts=self.card_counts.objects.all())
         publishedDeck.save()
         return publishedDeck
 
@@ -103,11 +103,31 @@ class Deck(models.Model):
                 card = self.card_counts.get(card=Card.objects.get(name=str))
                 card.multiplicity = num
 
+    def format_check(self, format): #returns true if the calling deck is legal in format
+        for _card_count in card_counts:
+            if _card_count.card in format.banned_cards:
+                return False
+            if _card_count.card in format.restricted_cards and _card_count.multiplicity > 1:
+                return False
+            legal_sets = False
+            for _set in _card_count.card.sets:
+                if _set in format.legal_sets:
+                    legal_sets = True
+            if not legal_sets:
+                return False
+        return True
+
 class PublishedDeck(models.Model):
+    score = models.IntegerField()
     user = models.ForeignKey(User)
     published = models.DateTimeField()
     description = models.TextField()
     card_counts = models.ManyToManyField('mainsite.CardCount')
+    legacy_legal = models.BooleanField()
+    vintage_legal = models.BooleanField()
+    modern_legal = models.BooleanField()
+    standard_legal = models.BooleanField()
+    commander_legal = models.BooleanField()
 
     def pull_deck(self, newUser):
         ownedDeck = Deck(user=newUser,created=datetime.now(),description=self.description,card_counts=self.card_counts.objects.all())
