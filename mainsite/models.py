@@ -71,6 +71,14 @@ class CardCount(models.Model):
     card = models.ForeignKey('mainsite.Card')
     multiplicity = models.IntegerField()
 
+    def getCardCount(self,_card,_multiplicity):
+        if CardCount.objects.filter(card=_card).filter(multiplicity=_multiplicity).count() == 0:
+            newCount = CardCount(card=_card,multiplicity=_multiplicity)
+            newCount.save()
+            return newCount
+        else:
+            return CardCount.objects.filter(card=_card).get(multiplicity=_multiplicity)
+
 class Deck(models.Model):
     user = models.ForeignKey(User)
     created = models.DateTimeField('datetime.now(EST())')
@@ -83,18 +91,12 @@ class Deck(models.Model):
         return publishedDeck
 
     def addCard(self, str):  #argument is the name of the card to add
-        if(self.card_counts.filter(card=Card.objects.get(name=str)).count() == 0):
-            if (CardCount.objects.filter(card=Card.objects.get(name=str)).filter(multiplicity=1).count() == 0):
-                card = CardCount(card=Card.objects.get(name=str),multiplicity=1)
-                card.save()
-                self.card_counts.add(card)
-            else:
-                self.card_counts.add(CardCount.objects.filter(card=Card.objects.get(name=str)).get(multiplicity=1))
+        if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
+            num = self.card_counts.get(card=Card.objects.get(name=str)).multiplicity
+            self.card_counts.remove(self.card_counts.get(card=Card.objects.get(name=str)))
+            self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),multiplicity+1))
         else:
-            _card = Card.objects.get(name=str))
-            num = self.card_counts.get(card=_card).multiplicity
-            if CardCount.objects.filter(card=_card).filter(multiplicity=num+1).count() == 0:
-                self.card_counts.remove(self.card_counts.get(card=_card))
+            self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),1))
 
     def removeCard(self, str): #argument is the name of the card to add
         if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
