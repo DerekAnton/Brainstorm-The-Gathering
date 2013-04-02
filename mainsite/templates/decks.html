@@ -10,7 +10,7 @@
             <ul class="nav nav-list">  
               <li class="active"><a href="#">My Decks</a></li>
                         {% for deck in decks %}
-<li><a href="/deck/?deck={{ deck.pk }}">{{ deck.pk }}</a></li>
+<li><a href="/decks/?deck={{ deck.pk }}">{{ deck.pk }}</a></li>
 {% endfor %}
             </ul>
           </div><!--/.well -->
@@ -18,12 +18,19 @@
 
 <div class="span3">
     <form>
-    <fieldset>
-    <input id="searchText" type="text" placeholder="Search Cards">
+        <fieldset>
+            {% if deck %}
+    <input type="hidden" name="deck" value={{deck.pk}}>
+    {% endif %}
+    <input id="searchText" type="text" placeholder="Search Cards" name="query">
     </label>
     <button id="submitSearch" type="submit" class="btn">Search</button>
     </fieldset>
-    </form>
+</form>
+<ul>
+    {% for card in results %}
+    <li> <a href="{{card.object.get_absolute_url}}">{{ card.object.name }}</a> 
+    {% endfor %}
 </div>
 	<div class="span1">
 <p><button id="addCard" data-loading-text="loading..." class="btn btn-primary">Add Card</button></p>  
@@ -33,7 +40,7 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">  
 	      <li class="nav-header">Name of Deck</li>
-          {% for card_count in card_counts.all %}
+          {% for card_count in deck.card_counts.all %}
 <li><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}</li>
 {% endfor %}
           </div><!--/.well -->

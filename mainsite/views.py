@@ -8,6 +8,7 @@ from mainsite.models import Card, Deck, PublishedDeck
 from bs4 import BeautifulSoup
 import requests
 from django.contrib.auth.models import User
+from haystack.query import SearchQuerySet
 
 def index(request):
     return render_to_response('home.html', {'user': request.user})
@@ -24,9 +25,21 @@ def profile(request, username):
 
 def decks(request):
     decks = Deck.objects.filter(user=request.user)
+    selected = request.GET.get('deck')
+    if selected:
+        deck = Deck.objects.all().get(pk=selected)
+    else:
+        deck = None
+    query = request.GET.get('query')
+    if query:
+        results = SearchQuerySet().filter(content=query)
+    else:
+        results = ''
     context = {
             'user':request.user, 
-            'decks': decks
+            'decks': decks,
+            'deck': deck,
+            'results':results
             }
     return render_to_response('decks.html', context)
 
@@ -36,7 +49,7 @@ def published(request, deck_id):
             'user':request.user, 
             'description': deck.description, 
             'card_counts':deck.card_counts,
-            'decks': decks
+            'decks': decks,
             }
     return render_to_response('published.html', context)
 

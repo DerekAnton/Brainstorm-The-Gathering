@@ -6,7 +6,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'mainsite.views.index', name='index'),
     url(r'^about/$', 'mainsite.views.about', name='about'),
-    url(r'^decks/', 'mainsite.views.decks', name='decks'),
+    url(r'^decks/$', 'mainsite.views.decks', name='decks'),
     url(r'^published/(?P<deck_id>\w+)/$', 'mainsite.views.published', name='published'),
     url(r'^profile/(?P<username>\w*)/*$', 'mainsite.views.profile', name='profile'),
     url(r'^login/', 'mainsite.views.login_view'),

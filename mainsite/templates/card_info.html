@@ -6,7 +6,7 @@
 {% block content %}
       <h1>Card Info - {{card.name}} ({{set}})</h1>
       <p><p>
-      <img src='/static/card_images/{{set}}/{{card.name}}.jpeg'>
+      <img src='{{card.get_image_url}}'>
       <p>Color: {{card.color}}</p>
       <p>Manacost: {{card.manacost}}</p> (CMC: {{ card.cmc }})
       <p>Power: {{card.power}}</p>

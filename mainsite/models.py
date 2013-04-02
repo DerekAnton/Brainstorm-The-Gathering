@@ -33,6 +33,9 @@ class Card(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_image_url(self, set_name):
+        return "http://static.brainstormtg.com/card_images/%s/%s.jpeg" % (set_name, self.name)
+
     def get_absolute_url(self):
         return "/info/%s/%s/" % (self.sets.all()[0], self.name)
 
