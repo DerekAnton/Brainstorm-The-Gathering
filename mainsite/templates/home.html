@@ -12,7 +12,7 @@
               <li class="active"><a href="#">Starcity Top 8 Decks</a></li>
 	      <li class="nav-header">Legacy Decks</li>
           {% for row in rows %}
-          <li>{{row}}</li>
+          <li>{{row|safe}}</li>
           {% endfor %}
             </ul>
           </div><!--/.well -->
