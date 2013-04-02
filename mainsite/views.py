@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from mainsite.models import Card
 from bs4 import BeautifulSoup
 import requests
+from django.contrib.auth.models import User
 
 def index(request):
     return render_to_response('home.html', {'user': request.user})
@@ -14,8 +15,11 @@ def index(request):
 def about(request):
     return render_to_response('about.html', {'user': request.user})
 
-def profile(request):
-    return render_to_response('profile.html', {'user': request.user})
+def profile(request, username):
+    user = User.objects.all().get(username=username)
+    decks = Deck.objects.filter(user=user)
+    context = {'username': username, 'decks':decks}
+    return render_to_response('profile.html', context)
 
 def decks(request):
     return render_to_response('decks.html', {'user': request.user})
