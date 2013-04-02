@@ -10,7 +10,7 @@
             <ul class="nav nav-list">  
               <li class="active"><a href="#">My Decks</a></li>
                         {% for deck in decks %}
-<li><a href="/deck/{{ deck.pk }}">{{ deck.pk }}</a></li>
+<li><a href="/deck/?deck={{ deck.pk }}">{{ deck.pk }}</a></li>
 {% endfor %}
             </ul>
           </div><!--/.well -->
