@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import requests
 from django.contrib.auth.models import User
 from haystack.query import SearchQuerySet
+from datetime import datetime
 
 def index(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")
@@ -38,8 +39,14 @@ def decks(request):
     selected = request.GET.get('deck')
     addCard = request.GET.get('addCard')
     removeCard = request.GET.get('removeCard')
-    if selected:
+    new = request.GET.get('new')
+    if new:
+        new = Deck(name=new,user=request.user,created=datetime.now(),description='')
+        new.save()
+        deck = None
+    elif selected:
         deck = Deck.objects.all().get(pk=selected)
+        
         if addCard:
             card = Card.objects.all().get(pk=addCard)
             if deck.card_counts.filter(card=card):

@@ -5,6 +5,7 @@
 
 {% block content %}
       <!--div class="row">-->
+      <h1>{{user.username}}</h1>
 	<div class="thumbnails">
 	  <img src="http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=292751&type=card">
 	  <div class="caption">
@@ -17,7 +18,7 @@
             <ul class="nav nav-list">  
 	      <li class="nav-header">Published Decks</li>
           {% for deck in published %}
-<li><a href="/published/{{ deck.pk }}">{{ deck.pk }}</a></li>
+<li><a href="/published/{{ deck.pk }}">{{ deck.name }}</a></li>
 {% endfor %}
             </ul>
 	</div>

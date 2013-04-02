@@ -10,13 +10,20 @@
             <ul class="nav nav-list">  
               <li class="active"><a href="#">My Decks</a></li>
                         {% for deck in decks %}
-<li><a href="/decks/?deck={{ deck.pk }}">{{ deck.pk }}</a></li>
+<li><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a></li>
 {% endfor %}
             </ul>
+      </div><!--/span-->
+      <form>
+          <input type="text" name="new" placeholder="New Deck Name">
+          <button class="btn" type="submit" >New Deck</button>
+      </form>
           </div><!--/.well -->
-	        </div><!--/span-->
 
 <div class="span3">
+    {% if deck %}
+    <p>Editing {{deck.name}}</p>
+    {% endif %}
     <form>
         <fieldset>
             {% if deck %}
@@ -43,7 +50,8 @@
 <form>
     <input type="hidden" name="deck" value={{deck.pk}}>
 	<div class="span1">
-<p><button id="removeCard" class="btn btn-primary">Remove Card</button></p>  
+        {% if deck %}
+        <p><button id="removeCard" class="btn btn-primary">Remove Card</button></p>  {%endif%}
 </div>
         <div class="span4">
           <div class="well sidebar-nav">
