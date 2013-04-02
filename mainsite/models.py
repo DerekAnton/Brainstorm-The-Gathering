@@ -25,7 +25,7 @@ class Card(models.Model):
     def get_absolute_url(self):
         return "/info/%s/%s/" % (self.sets.all()[0], self.name)
 
-class FormatLegality(models.Model):
+class Format(models.Model):
     name = models.CharField(max_length=200)
     legal_sets = models.ManyToManyField('mainsite.Set')
     banned_cards = models.ManyToManyField('mainsite.Card')
@@ -102,10 +102,6 @@ class Deck(models.Model):
             else:
                 card = self.card_counts.get(card=Card.objects.get(name=str))
                 card.multiplicity = num
-
-    #def format_check(self, format):
-    #    for _card_count in card_counts:
-
 
 class PublishedDeck(models.Model):
     user = models.ForeignKey(User)
