@@ -32,7 +32,9 @@
         {% if deck %}
     <input type="hidden" name="deck" value={{deck.pk}}>
     {% endif %}
+    {% if results %}
 <p><button id="addCard" class="btn btn-primary" type="submit">Add Card</button></p>  
+{% endif %}
     {% for card in results %}
     <input type="radio" name="addCard" value="{{card.object.pk}}"><a href="{{card.object.get_absolute_url}}">{{ card.object.name }}</a> 
     {% endfor %}

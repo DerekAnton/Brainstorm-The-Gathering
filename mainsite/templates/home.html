@@ -11,23 +11,9 @@
             <ul class="nav nav-list">  
               <li class="active"><a href="#">Starcity Top 8 Decks</a></li>
 	      <li class="nav-header">Legacy Decks</li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-              <li class="nav-header">Standard Decks</li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
+          {% for row in rows %}
+          <li>{{row}}</li>
+          {% endfor %}
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

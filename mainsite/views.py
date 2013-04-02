@@ -11,7 +11,15 @@ from django.contrib.auth.models import User
 from haystack.query import SearchQuerySet
 
 def index(request):
-    return render_to_response('home.html', {'user': request.user})
+    r = requests.get("http://www.starcitygames.com/pages/decklists/")
+    soup = BeautifulSoup(r.text)
+
+    top = soup.find('div', id="dynamicpage_standard_list").findAll('p')[0].a['href']
+
+    table = BeautifulSoup(requests.get(top).text).find('section', id="content").table
+    rows = ['<a href="%s">%s</a>' % (row.a['href'], row.strong.text) for row in table.findAll('tr')[5:13]] 
+    context = {'user': request.user, 'rows':rows}
+    return render_to_response('home.html', context)
 
 def about(request):
     return render_to_response('about.html', {'user': request.user})
@@ -115,5 +123,8 @@ def top_decks(request):
     soup = BeautifulSoup(r.text)
 
     top = soup.find('div', id="dynamicpage_standard_list").findAll('p')[0].a['href']
+
+    table = BeautifulSoup(requests.get(top).text).find('section', id="content").table
+    rows = table.findAll('td', {'class':'deckdbbody2'}, limit=8)
     
-    return HttpResponse(BeautifulSoup(requests.get(top).text).find('section', id="content").table)
+    return HttpResponse(table)
