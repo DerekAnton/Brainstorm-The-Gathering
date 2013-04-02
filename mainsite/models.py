@@ -28,8 +28,8 @@ class Card(models.Model):
 class Format(models.Model):
     name = models.CharField(max_length=200)
     legal_sets = models.ManyToManyField('mainsite.Set')
-    banned_cards = models.ManyToManyField('mainsite.Card')
-    restricted_cards = models.ManyToManyField('mainsite.Card')
+    banned_cards = models.ManyToManyField('mainsite.Card',related_name='banned_cards')
+    restricted_cards = models.ManyToManyField('mainsite.Card',related_name='restricted_cards')
 
 class Set(models.Model):
     name = models.CharField(max_length=200)
