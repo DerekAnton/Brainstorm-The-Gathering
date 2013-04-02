@@ -18,7 +18,9 @@ def index(request):
 
     table = BeautifulSoup(requests.get(top).text).find('section', id="content").table
     rows = ['<a href="%s">%s</a>' % (row.a['href'], row.strong.text) for row in table.findAll('tr')[5:13]] 
-    context = {'user': request.user, 'rows':rows}
+
+    recent = PublishedDeck.objects.all().order_by('-published')
+    context = {'user': request.user, 'rows':rows, 'recent':recent}
     return render_to_response('home.html', context)
 
 def about(request):

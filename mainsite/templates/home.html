@@ -22,24 +22,9 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">  
 	      <li class="nav-header">Recently Published Decks</li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
+          {% for deck in recent %}
+          <li> {{deck.pk}} </li>
+          {% endfor %}
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
