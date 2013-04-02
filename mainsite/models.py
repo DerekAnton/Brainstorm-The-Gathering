@@ -84,6 +84,7 @@ class CardCount(models.Model):
             return CardCount.objects.filter(card=_card).get(multiplicity=_multiplicity)
 
 class Deck(models.Model):
+    name = models.CharField(max_length=200)
     user = models.ForeignKey(User)
     created = models.DateTimeField('datetime.now(EST())')
     description = models.TextField()
@@ -137,6 +138,7 @@ class Deck(models.Model):
         return True
 
 class PublishedDeck(models.Model):
+    name = models.CharField(max_length=200)
     score = models.IntegerField()
     user = models.ForeignKey(User)
     published = models.DateTimeField()

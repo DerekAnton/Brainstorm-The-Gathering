@@ -30,7 +30,7 @@ def profile(request, username):
     user = User.objects.all().get(username=username)
     decks = Deck.objects.filter(user=user)
     published = PublishedDeck.objects.filter(user=user)
-    context = {'username': username, 'decks':decks, 'published':published}
+    context = {'username': username, 'decks':decks, 'published':published, 'user':user}
     return render_to_response('profile.html', context)
 
 def decks(request):
@@ -79,6 +79,7 @@ def published(request, deck_id):
     context = {
             'user':request.user, 
             'description': deck.description, 
+            'deck':deck,
             'card_counts':deck.card_counts,
             'decks': decks,
             }

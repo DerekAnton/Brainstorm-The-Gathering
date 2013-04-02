@@ -23,7 +23,7 @@
             <ul class="nav nav-list">  
 	      <li class="nav-header">Recently Published Decks</li>
           {% for deck in recent %}
-          <li> {{deck.pk}} </li>
+          <li><a href=/published/{{deck.pk}}>{{deck.name}} - {{deck.user.username}}</a></li>
           {% endfor %}
             </ul>
           </div><!--/.well -->
