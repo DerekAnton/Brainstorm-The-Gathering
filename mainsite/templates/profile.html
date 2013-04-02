@@ -7,9 +7,11 @@
       <!--div class="row">-->
       <h1>{{user.username}}</h1>
 	<div class="thumbnails">
-	  <img src="http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=292751&type=card">
-	  <div class="caption">
+        {% if favorite %}
+        <img src="favorite">
 	 <h5>User's Favorite Card</h5>
+        {% endif %}
+	  <div class="caption">
 	  </div>
 	</div>
 

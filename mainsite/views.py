@@ -4,7 +4,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card
+from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard
 from bs4 import BeautifulSoup
 import requests
 from django.contrib.auth.models import User
@@ -29,9 +29,14 @@ def about(request):
 
 def profile(request, username):
     user = User.objects.all().get(username=username)
+    favorite = FavoriteCard.objects.all().get(user=user)
+    if favorite:
+        favorite_img = favorite.card.get_image_url(favorite.card.sets.all()[0])
+    else:
+        favorite_img = None
     decks = Deck.objects.filter(user=user)
-    published = PublishedDeck.objects.filter(user=user)
-    context = {'username': username, 'decks':decks, 'published':published, 'user':user}
+    published = PublishedDeck.objects.filter(user=user)[:10]
+    context = {'username': username, 'decks':decks, 'published':published, 'user':user,'favorite':favorite_img}
     return render_to_response('profile.html', context)
 
 def decks(request):
@@ -68,9 +73,10 @@ def decks(request):
             new = PublishedDeck(name=deck.name,user=request.user,published=datetime.now(),description='',score=0)
             new.save()
             for count in deck.card_counts.all():
-                count.pk = None
-                count.save()
-                new.card_counts.add(count)
+                new_count = CardCount(card=count.card, multiplicity=count.multiplicity)
+                new_count.save()
+                new.card_counts.add(new_count)
+            new.save()
 
     else:
         deck = None
@@ -116,6 +122,17 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+def change_favorite(request, card_name):
+    user = request.user
+    new_card = Card.objects.all().get(name=card_name)
+    try:
+        favorite = FavoriteCard.objects.all().get(user=user)
+    except:
+        favorite = FavoriteCard(user=user,card=new_card)
+    favorite.card = new_card
+    favorite.save()
+    return HttpResponseRedirect('/profile/%s' % user.username)
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -132,7 +149,7 @@ def register(request):
 def card_info(request, card_name, set_name):
         card = Card.objects.get(name__iexact=card_name)
         _set = card.sets.all()[0]
-        return render_to_response('card_info.html', {'card': card, 'set': _set,'user':request.user})
+        return render_to_response('card_info.html', {'card': card, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all()})
 
 def top_decks(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")

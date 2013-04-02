@@ -5,12 +5,13 @@
 
 {% block content %}
       <h1>Card Info - {{card.name}} ({{set}})</h1>
-      <p><p>
-      <img src='{{card.get_image_url}}'>
+      <p>{% for set in sets %} <a href="/info/{{set.name}}/{{card.name}}"> {{set.name}} </a> {% endfor %}<p>
+      <img src='{{card_image_url}}'>
       <p>Color: {{card.color}}</p>
       <p>Manacost: {{card.manacost}}</p> (CMC: {{ card.cmc }})
       <p>Power: {{card.power}}</p>
       <p>Toughness: {{card.toughness}}</p>
       <p>"{{card.flavor}}"</p>
+      <a href="/favorite/{{card.name}}">Make favorite</a>
 
 {% endblock %}
