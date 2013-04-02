@@ -4,7 +4,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from mainsite.models import Card, Deck, PublishedDeck
+from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card
 from bs4 import BeautifulSoup
 import requests
 from django.contrib.auth.models import User
@@ -26,8 +26,20 @@ def profile(request, username):
 def decks(request):
     decks = Deck.objects.filter(user=request.user)
     selected = request.GET.get('deck')
+    addCard = request.GET.get('addCard')
+    removeCard = request.GET.get('removeCard')
     if selected:
         deck = Deck.objects.all().get(pk=selected)
+        if addCard:
+            card = Card.objects.all().get(pk=addCard)
+            count = CardCount(card=card, multiplicity=1)
+            count.save()
+            deck.card_counts.add(count)
+        elif removeCard:
+            count = CardCount.objects.all().get(pk=removeCard)
+            deck.card_counts.remove(count)
+
+
     else:
         deck = None
     query = request.GET.get('query')
