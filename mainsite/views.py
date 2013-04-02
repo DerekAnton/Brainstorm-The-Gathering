@@ -4,7 +4,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from mainsite.models import Card, Deck
+from mainsite.models import Card, Deck, PublishedDeck
 from bs4 import BeautifulSoup
 import requests
 from django.contrib.auth.models import User
@@ -18,13 +18,27 @@ def about(request):
 def profile(request, username):
     user = User.objects.all().get(username=username)
     decks = Deck.objects.filter(user=user)
-    context = {'username': username, 'decks':decks}
+    published = PublishedDeck.objects.filter(user=user)
+    context = {'username': username, 'decks':decks, 'published':published}
     return render_to_response('profile.html', context)
 
-def decks(request, deck_id):
-    deck = Deck.objects.all().get(pk=deck_id)
-    context = {'user':request.user, 'description': deck.description, 'card_counts':deck.card_counts}
+def decks(request):
+    decks = Deck.objects.filter(user=request.user)
+    context = {
+            'user':request.user, 
+            'decks': decks
+            }
     return render_to_response('decks.html', context)
+
+def published(request, deck_id):
+    deck = PublishedDeck.objects.all().get(pk=deck_id)
+    context = {
+            'user':request.user, 
+            'description': deck.description, 
+            'card_counts':deck.card_counts,
+            'decks': decks
+            }
+    return render_to_response('published.html', context)
 
 def login_view(request):
     if request.method != 'POST':
