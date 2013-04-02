@@ -32,12 +32,21 @@ def decks(request):
         deck = Deck.objects.all().get(pk=selected)
         if addCard:
             card = Card.objects.all().get(pk=addCard)
-            count = CardCount(card=card, multiplicity=1)
-            count.save()
-            deck.card_counts.add(count)
+            if deck.card_counts.filter(card=card):
+                count = deck.card_counts.get(card=card)
+                count.multiplicity += 1
+                count.save()
+            else:
+                count = CardCount(card=card, multiplicity=1)
+                count.save()
+                deck.card_counts.add(count)
         elif removeCard:
             count = CardCount.objects.all().get(pk=removeCard)
-            deck.card_counts.remove(count)
+            if count.multiplicity > 1:
+                count.multiplicity -= 1
+                count.save()
+            else:
+                deck.card_counts.remove(count)
 
 
     else:
