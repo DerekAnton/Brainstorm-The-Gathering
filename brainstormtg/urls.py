@@ -5,6 +5,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'mainsite.views.index', name='index'),
+    url(r'^about/$', 'mainsite.views.about', name='about'),
+    url(r'^decks/$', 'mainsite.views.decks', name='decks'),
+    url(r'^profile/$', 'mainsite.views.profile', name='profile'),
     url(r'^login/', 'mainsite.views.login_view'),
     url(r'^logout/', 'mainsite.views.logout_view'),
     url(r'^register/', 'mainsite.views.register'),

@@ -9,7 +9,16 @@ from bs4 import BeautifulSoup
 import requests
 
 def index(request):
-    return render_to_response('base.html', {'user': request.user})
+    return render_to_response('home.html', {'user': request.user})
+
+def about(request):
+    return render_to_response('about.html', {'user': request.user})
+
+def profile(request):
+    return render_to_response('profile.html', {'user': request.user})
+
+def decks(request):
+    return render_to_response('decks.html', {'user': request.user})
 
 def login_view(request):
     if request.method != 'POST':
