@@ -71,7 +71,8 @@ class CardCount(models.Model):
     card = models.ForeignKey('mainsite.Card')
     multiplicity = models.IntegerField()
 
-    def getCardCount(self,_card,_multiplicity):
+    @staticmethod
+    def getCardCount(_card,_multiplicity):
         if CardCount.objects.filter(card=_card).filter(multiplicity=_multiplicity).count() == 0:
             newCount = CardCount(card=_card,multiplicity=_multiplicity)
             newCount.save()
@@ -94,7 +95,7 @@ class Deck(models.Model):
         if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
             num = self.card_counts.get(card=Card.objects.get(name=str)).multiplicity
             self.card_counts.remove(self.card_counts.get(card=Card.objects.get(name=str)))
-            self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),multiplicity+1))
+            self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),num+1))
         else:
             self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),1))
 
