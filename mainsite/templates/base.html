@@ -71,7 +71,7 @@ function publishDeck()
         <!--      <li class="active"><a href="/home">Home</a></li> -->
 	<li><a href="/">Home</a></li> 
         {% if user.is_authenticated %}
-		 <li><a href="/profile">Profile</a></li>
+        <li><a href="/profile/{{user.username}}">Profile</a></li>
  		<li><a href="/decks">My Decks</a></li>
          <li><a href="/logout">Logout</a></li>
          {% else %}

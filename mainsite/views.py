@@ -4,7 +4,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from mainsite.models import Card
+from mainsite.models import Card, Deck
 from bs4 import BeautifulSoup
 import requests
 from django.contrib.auth.models import User
@@ -21,8 +21,10 @@ def profile(request, username):
     context = {'username': username, 'decks':decks}
     return render_to_response('profile.html', context)
 
-def decks(request):
-    return render_to_response('decks.html', {'user': request.user})
+def decks(request, deck_id):
+    deck = Deck.objects.all().get(pk=deck_id)
+    context = {'user':request.user, 'description': deck.description, 'card_counts':deck.card_counts}
+    return render_to_response('decks.html', context)
 
 def login_view(request):
     if request.method != 'POST':

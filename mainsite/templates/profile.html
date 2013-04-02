@@ -16,22 +16,9 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">  
 	      <li class="nav-header">Published Decks</li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-	      <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
-              <li><a href="#">Deck</a></li>
+          {% for deck in decks %}
+<li><a href="/deck/{{ deck.pk }}">{{ deck.pk }}</a></li>
+{% endfor %}
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
