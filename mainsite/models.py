@@ -30,6 +30,9 @@ class Card(models.Model):
     sub_typing = models.ManyToManyField('mainsite.SubTyping')
     super_typing = models.ManyToManyField('mainsite.SuperTyping')
 
+    def urlName(self):
+        return name.replace('/', '-').replace(',', '-').replace(' ', '_').replace('\'', '-')
+
     def __unicode__(self):
         return self.name
 
