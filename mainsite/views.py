@@ -10,6 +10,7 @@ import requests
 from django.contrib.auth.models import User
 from haystack.query import SearchQuerySet
 from datetime import datetime
+import urllib
 
 def index(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")
@@ -147,9 +148,13 @@ def register(request):
     }, context_instance=RequestContext(request))
 
 def card_info(request, card_name, set_name):
-        card = Card.objects.get(name__iexact=card_name)
-        _set = card.sets.all()[0]
-        return render_to_response('card_info.html', {'card': card, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all()})
+    card = Card.objects.get(name__iexact=card_name)
+    _set = card.sets.all()[0]
+    params = {'cards': card_name}
+    params2 = {'cn': card_name}
+    price_url = 'http://magic.tcgplayer.com/db/magic_single_card.asp?' + urllib.urlencode(params2)
+    price_query = urllib.urlencode(params)
+    return render_to_response('card_info.html', {'card': card, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all(), 'price_query': price_query, 'price_url': price_url})
 
 def top_decks(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")

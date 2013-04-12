@@ -32,42 +32,7 @@
                                    <link rel="shortcut icon" href="/static/bootstrap/docs/assets/ico/favicon.png">
 
 
-<script>
-$(function(){
-	
-	var cardName = {{card.name}};
 
-	$.get('/magiccards_info/' + cardName, function(data){
-		$('#hidden').hide();
-		$(data).appendTo('#hidden');
-		var lowP = $('#hidden td.TCGPPlayerLow').text();
-		var midP = $('#hidden td.TCGPPlayerMid').text();
-		var highP = $('#hidden td.TCGPPlayerHigh').text();
-
-		$('#lowPrice').text(lowP);
-		$('#midPrice').text(midP);
-		$('#highPrice').text(highP);
-	});
-
-});
-
-function addCard()
-{
-
-}
-
-function removeCard()
-{
-
-}
-
-function publishDeck()
-{
-
-}
-
-
-</script>
 
 
   </head>
