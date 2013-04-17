@@ -30,8 +30,14 @@ class Card(models.Model):
     sub_typing = models.ManyToManyField('mainsite.SubTyping')
     super_typing = models.ManyToManyField('mainsite.SuperTyping')
 
+    def urlName(self):
+        return name.replace('/', '-').replace(',', '-').replace(' ', '_').replace('\'', '-')
+
     def __unicode__(self):
         return self.name
+
+    def get_image_url(self, set_name):
+        return "http://static.brainstormtg.com/card_images/%s/%s.jpeg" % (set_name, self.name)
 
     def get_absolute_url(self):
         return "/info/%s/%s/" % (self.sets.all()[0], self.name)
@@ -71,7 +77,17 @@ class CardCount(models.Model):
     card = models.ForeignKey('mainsite.Card')
     multiplicity = models.IntegerField()
 
+    @staticmethod
+    def getCardCount(_card,_multiplicity):
+        if CardCount.objects.filter(card=_card).filter(multiplicity=_multiplicity).count() == 0:
+            newCount = CardCount(card=_card,multiplicity=_multiplicity)
+            newCount.save()
+            return newCount
+        else:
+            return CardCount.objects.filter(card=_card).get(multiplicity=_multiplicity)
+
 class Deck(models.Model):
+    name = models.CharField(max_length=200)
     user = models.ForeignKey(User)
     created = models.DateTimeField('datetime.now(EST())')
     description = models.TextField()
@@ -83,18 +99,12 @@ class Deck(models.Model):
         return publishedDeck
 
     def addCard(self, str):  #argument is the name of the card to add
-        if(self.card_counts.filter(card=Card.objects.get(name=str)).count() == 0):
-            if (CardCount.objects.filter(card=Card.objects.get(name=str)).filter(multiplicity=1).count() == 0):
-                card = CardCount(card=Card.objects.get(name=str),multiplicity=1)
-                card.save()
-                self.card_counts.add(card)
-            else:
-                self.card_counts.add(CardCount.objects.filter(card=Card.objects.get(name=str)).get(multiplicity=1))
+        if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
+            num = self.card_counts.get(card=Card.objects.get(name=str)).multiplicity
+            self.card_counts.remove(self.card_counts.get(card=Card.objects.get(name=str)))
+            self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),num+1))
         else:
-            _card = Card.objects.get(name=str))
-            num = self.card_counts.get(card=_card).multiplicity
-            if CardCount.objects.filter(card=_card).filter(multiplicity=num+1).count() == 0:
-                self.card_counts.remove(self.card_counts.get(card=_card))
+            self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),1))
 
     def removeCard(self, str): #argument is the name of the card to add
         if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
@@ -131,6 +141,7 @@ class Deck(models.Model):
         return True
 
 class PublishedDeck(models.Model):
+    name = models.CharField(max_length=200)
     score = models.IntegerField()
     user = models.ForeignKey(User)
     published = models.DateTimeField()
@@ -141,6 +152,7 @@ class PublishedDeck(models.Model):
     modern_legal = models.BooleanField()
     standard_legal = models.BooleanField()
     commander_legal = models.BooleanField()
+    comments = models.ManyToManyField('mainsite.Comment')
 
     def pull_deck(self, newUser):
         ownedDeck = Deck(user=newUser,created=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all())
@@ -158,7 +170,7 @@ class PublishedDeck(models.Model):
         return self.score
 
 class Collection(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, primary_key=True)
     cards = models.ManyToManyField('mainsite.Card')
 
     def addCard(self, str):  #argument is the name of the card to add

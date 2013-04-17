@@ -4,13 +4,27 @@
 {% block title %}Info {{ card.name }}{% endblock %}
 
 {% block content %}
-      <h1>Card Info - {{card.name}} ({{set}})</h1>
-      <p><p>
-      <img src='/static/card_images/{{set}}/{{card.name}}.jpeg'>
-      <p>Color: {{card.color}}</p>
-      <p>Manacost: {{card.manacost}}</p> (CMC: {{ card.cmc }})
-      <p>Power: {{card.power}}</p>
-      <p>Toughness: {{card.toughness}}</p>
-      <p>"{{card.flavor}}"</p>
+	<h1>Card Info - {{card.name}} ({{set}})</h1>
+	<p>{% for set in sets %} <a href="/info/{{set.name}}/{{card.name}}"> {{set.name}} </a> {% endfor %}<p>
+	<img src='{{card_image_url}}'>
+	<p>Color: {{card.color}}</p>
+	<p>Manacost: {{card.manacost}}</p> (CMC: {{ card.cmc }})
+	<p>Power: {{card.power}}</p>
+	<p>Toughness: {{card.toughness}}</p>
+	{% if card.flavor %}
+	<p id="card_flavor">"{{card.flavor}}"</p>
+	{% endif %}
+	<a href="/favorite/{{card.name}}">Make favorite</a><br>
+	<a id="purchase_link" href="{{ price_url }}">Purchase Card</a>
+	<div id="average_price">Estimated Price Range: </div>
+	<script src="/static/bootstrap/docs/assets/js/jquery.js"></script>
+	<script>
+		$('#card_flavor').css('font-style', 'italic');
+		var price_url = "http://blacklotusproject.com/json/?{{ price_query }}";
+		$.getJSON(price_url, function(data){
+			$('#average_price').text($('#average_price').text() + data.cards[0].low + ' to ' + data.cards[0].high);
+			console.log(data.cards[0].average);
+		});
+	</script>
 
 {% endblock %}

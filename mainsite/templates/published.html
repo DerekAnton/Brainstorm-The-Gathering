@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block title %}Deck: {{deck.name}} by {{deck.user.username}}{% endblock %}
+
+{% block content %}
+<div class="span4">
+  <div class="well sidebar-nav">
+    <ul class="nav nav-list">  
+      <li class="nav-header">{{deck.name}} by <a href="/profile/{{deck.user.username}}">{{deck.user.username}}</a></li>
+      {% for card_count in card_counts.all %}
+      <li><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}</li>
+      {% endfor %}
+    </ul>
+  </div><!--/.well -->
+  <ul id="comment_list">
+    {% for comment in comments.all %}
+    <li><b>{{comment.user}}</b> ({{ comment.timestamp }}): {{ comment.message }}</li>
+    {% endfor %}
+  </ul>
+
+  <form>
+    <textarea name="new_comment" rows="3" cols="20" value="" maxlength="100"></textarea>
+    <input type="hidden" name="deck" value={{deck.pk}}>
+    <input type="hidden" name="user" value={{deck.user.username}}>
+    <button class="btn" type="submit">Add Comment!</button>
+  </form>
+</div><!--/span-->
+{% endblock %}
