@@ -27,7 +27,7 @@ deck_links = [r.find('td').find('a')['href'] for r in table.findAll('tr')[5:]]
 match = re.compile('^(\d+) ((.)+)')
 user = User.objects.get(username='admin')
 
-for deck_link in deck_links[:2]:
+for deck_link in deck_links[:8]:
     r = requests.get(deck_link)
     soup = BeautifulSoup(r.text)
     title = soup.find('header', {'class':'deck_title'}).a.text
