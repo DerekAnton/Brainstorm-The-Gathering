@@ -4,7 +4,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection
+from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set
 from bs4 import BeautifulSoup
 import requests
 from django.contrib.auth.models import User
@@ -30,8 +30,8 @@ def about(request):
 
 def profile(request, username):
     user = User.objects.all().get(username=username)
-    favorite = FavoriteCard.objects.all().get(user=user)
-    if favorite:
+    if FavoriteCard.objects.all().filter(user=user):
+        favorite = FavoriteCard.objects.all().get(user=user)
         favorite_img = favorite.card.get_image_url(favorite.card.sets.all()[0])
     else:
         favorite_img = None
@@ -55,6 +55,8 @@ def decks(request):
     userCollection = Collection.objects.all().filter(user=request.user)[0]
     deck = None
 
+    #if Collection.objects.all().filter(user=request.user)[0]:
+    #    usercollection = Collection.objects.all().filter
 
     if selected and addCard and (addCardButton == 'deckAdd'):
         deck = Deck.objects.all().get(pk=selected)
@@ -197,7 +199,7 @@ def register(request):
 
 def card_info(request, card_name, set_name):
     card = Card.objects.get(name__iexact=card_name)
-    _set = card.sets.all()[0]
+    _set = Set.objects.get(name=set_name)
     params = {'cards': card_name}
     params2 = {'cn': card_name}
     price_url = 'http://magic.tcgplayer.com/db/magic_single_card.asp?' + urllib.urlencode(params2)

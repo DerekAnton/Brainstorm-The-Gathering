@@ -30,16 +30,20 @@ class Card(models.Model):
     sub_typing = models.ManyToManyField('mainsite.SubTyping')
     super_typing = models.ManyToManyField('mainsite.SuperTyping')
 
-    def urlName(self):
-        return name.replace('/', '-').replace(',', '-').replace(' ', '_').replace('\'', '-')
-
     def __unicode__(self):
         return self.name
 
-    def get_image_url(self, set_name):
-        return "http://static.brainstormtg.com/card_images/%s/%s.jpeg" % (set_name, self.name)
+    def get_image_url(self, set_name=None):
+        if set_name and self.sets.all().filter(name=set_name):
+            return "http://static.brainstormtg.com/card_images/%s/%s.jpeg" % (set_name,self.name)
+        return "http://static.brainstormtg.com/card_images/%s/%s.jpeg" % (self.sets.all()[0],self.name)
 
     def get_absolute_url(self):
+        return "/info/%s/%s/" % (self.sets.all()[0], self.name)
+
+    def get_absolute_url(self, set_name=None):
+        if set_name and self.sets.all().filter(name=set_name):
+            return "/info/%s/%s/" % (self.sets.all().get(name=set_name),self.name)
         return "/info/%s/%s/" % (self.sets.all()[0], self.name)
 
 class Format(models.Model):
