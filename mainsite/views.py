@@ -30,14 +30,15 @@ def about(request):
 
 def profile(request, username):
     user = User.objects.all().get(username=username)
-    favorite = FavoriteCard.objects.all().get(user=user)
-    if favorite:
+    if FavoriteCard.objects.all().filter(user=user):
+        favorite = FavoriteCard.objects.all().get(user=user)
         favorite_img = favorite.card.get_image_url(favorite.card.sets.all()[0])
     else:
         favorite_img = None
     decks = Deck.objects.filter(user=user)
     published = PublishedDeck.objects.filter(user=user)[:10]
-    context = {'username': username, 'decks':decks, 'published':published, 'user':user,'favorite':favorite_img}
+    collection = Collection.objects.all().filter(user=user)[0]
+    context = {'username': username, 'decks':decks, 'published':published, 'user':user,'favorite':favorite_img, 'collection':collection}
     return render_to_response('profile.html', context)
 
 def decks(request):
@@ -52,9 +53,15 @@ def decks(request):
     collectionRemove = request.GET.get('collection_remove')
     removeCardCollection = request.GET.get('removeCardCollection')
     addCardButton = request.GET.get('addCardButton')
-    userCollection = Collection.objects.all().filter(user=request.user)[0]
+    delete_deck = request.GET.get('deck_delete')
     deck = None
 
+    if Collection.objects.all().filter(user=request.user):
+        userCollection = Collection.objects.all().filter(user=request.user)[0]
+    else:
+        new = Collection(user=request.user)
+        new.save()
+        userCollection = new
 
     if selected and addCard and (addCardButton == 'deckAdd'):
         deck = Deck.objects.all().get(pk=selected)
@@ -73,7 +80,7 @@ def decks(request):
         if collectionRemove:
             card = Card.objects.all().get(pk=removeCardCollection)
             userCollection.cards.remove(card)
-        elif addCard:
+        elif addCard and (addCardButton == 'collectionAdd'):
             card = Card.objects.all().get(pk=addCard)
             userCollection.cards.add(card)
         elif removeCard:
@@ -83,30 +90,13 @@ def decks(request):
                 count.save()
             else:
                 deck.card_counts.remove(count)
-    elif new:
+    if new:
         new = Deck(name=new,user=request.user,created=datetime.now(),description='')
         new.save()
         deck = None
     elif selected:
         deck = Deck.objects.all().get(pk=selected)
-        if addCard:
-            card = Card.objects.all().get(pk=addCard)
-            if deck.card_counts.filter(card=card):
-                count = deck.card_counts.get(card=card)
-                count.multiplicity += 1
-                count.save()
-            else:
-                count = CardCount(card=card, multiplicity=1)
-                count.save()
-                deck.card_counts.add(count)
-        elif removeCard:
-            count = CardCount.objects.all().get(pk=removeCard)
-            if count.multiplicity > 1:
-                count.multiplicity -= 1
-                count.save()
-            else:
-                deck.card_counts.remove(count)
-        elif publish:
+        if publish:
             new = PublishedDeck(name=deck.name,user=request.user,published=datetime.now(),description='',score=0)
             new.save()
             for count in deck.card_counts.all():
@@ -122,6 +112,9 @@ def decks(request):
         results = SearchQuerySet().filter(content=query)
     else:
         results = ''
+    if delete_deck and Deck.objects.all().filter(pk=delete_deck):
+        if (Deck.objects.all().get(pk=delete_deck).user == request.user):
+            Deck.objects.all().get(pk=delete_deck).delete()
     context = {
             'user':request.user, 
             'decks': decks,

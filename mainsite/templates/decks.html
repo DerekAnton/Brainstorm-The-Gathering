@@ -4,14 +4,26 @@
   {% block title %}Home{% endblock %}
 
   {% block content %}
+  <style>
+    table{
+        text-align:right;
+        vertical-align: bottom;
+      }
+  </style>
   <div class="row">
     <div class="span3">
       <div class="well sidebar-nav">
         <ul class="nav nav-list">  
           <li class="active"><a href="#">My Decks</a></li>
-          {% for deck in decks %}
-          <li><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a></li>
-          {% endfor %}
+          <form>
+            <table>
+              {% for deck in decks %}
+              <tr>
+                <td><button class="btn" type="submit" name="deck_delete" value="{{ deck.pk }}">Delete Deck</button></td><td><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a></td>
+              </tr>
+              {% endfor %}
+            </table>
+          </form>
         </ul>
       </div><!--/span-->
       <form>
@@ -74,14 +86,16 @@
         <p><button id="removeCard" class="btn btn-primary">Remove Card</button></p>  {%endif%}
       </div>
       <div class="span4">
+        {% if deck %}
         <div class="well sidebar-nav">
           <ul class="nav nav-list">  
-            <li class="nav-header">Name of Deck</li>
+            <li class="nav-header">{{ deck.name }}</li>
             {% for card_count in deck.card_counts.all %}
             <li><input type="radio" name="removeCard" value="{{card_count.pk}}"><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}</li>
             {% endfor %}
           </ul>
         </div><!--/.well -->
+        {% endif %}
        </div><!--/span-->
      </form>
    </div>

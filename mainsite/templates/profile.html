@@ -4,26 +4,36 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-      <!--div class="row">-->
-      <h1>{{user.username}}</h1>
-	<div class="thumbnails">
-        {% if favorite %}
-        <img src="favorite">
-	 <h5>User's Favorite Card</h5>
-        {% endif %}
-	  <div class="caption">
-	  </div>
-	</div>
+<!--div class="row">-->
+<h1>{{user.username}}</h1>
+<div class="thumbnails">
+  {% if favorite %}
+  <img src="favorite">
+  <h5>User's Favorite Card</h5>
+  {% endif %}
+  <div class="caption">
+  </div>
+</div>
 
-        <div class="span4">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">  
-	      <li class="nav-header">Published Decks</li>
-          {% for deck in published %}
-<li><a href="/published/{{ deck.pk }}">{{ deck.name }}</a></li>
-{% endfor %}
-            </ul>
-	</div>
-      </div>
+<div class="span4">
+  <div class="well sidebar-nav">
+    <ul class="nav nav-list">  
+     <li class="nav-header">Published Decks</li>
+     {% for deck in published %}
+     <li><a href="/published/{{ deck.pk }}">{{ deck.name }}</a></li>
+     {% endfor %}
+   </ul>
+  </div>
+  <ul class="nav nav-list">  
+    <li class="nav-header">{{ user.username }}'s Collection</li>
+    {% if collection %}
+    <form>
+      {% for card in collection.cards.all %}
+      <li><a href="{{card.get_absolute_url}}">{{ card.name }}</a></li>
+      {% endfor %}
+    </form>
+    {% endif %}
+  </ul>
+</div>
 
 {% endblock %}
