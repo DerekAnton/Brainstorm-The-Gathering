@@ -1,0 +1,5 @@
+.elasticbeanstalk/
+*.DS_Store
+*.pyc
+brainstormtg/woosh_index/*
+development.db

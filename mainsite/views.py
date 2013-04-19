@@ -1,9 +1,11 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.hashers import make_password
 from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set
 from bs4 import BeautifulSoup
 import requests
@@ -186,14 +188,32 @@ def change_favorite(request, card_name):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            new_user = form.save()
-            return HttpResponseRedirect("/login/")
-    else:
-        form = UserCreationForm()
+        name=request.POST['username']
+        pw=request.POST['password']
+        pw2=request.POST['password2']
+        email=request.POST['email']
+        message=''
+        if User.objects.filter(username=name):
+            message = message + 'Username taken\n'
+        if email and User.objects.filter(email=email):
+            message = message + 'Email taken\n'
+        if pw != pw2:
+            message = message + 'Passwords do not match\n'
+        print message
+        if message == '':
+            newUser = User(username=name,password=make_password(pw))
+            if email:
+                newUser.email=email
+            newUser.save()
+            newUser=authenticate(username=name, password=pw)
+            login(request,newUser)
+            return HttpResponseRedirect('/')
+        return render_to_response("register.html", {
+            'user': request.user,
+            'message': message,
+            }, context_instance=RequestContext(request))
     return render_to_response("register.html", {
-        'form': form,
+        'message': '',
         'user': request.user,
     }, context_instance=RequestContext(request))
 

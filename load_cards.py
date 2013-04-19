@@ -30,6 +30,7 @@ types = set(['Artifact', 'Creature', 'Enchantment', 'Instant', 'Land', 'Planeswa
 super_types = set(['Basic', 'Legendary', 'Snow', 'World'])
 for card in cards:
     name = card.find('name').text.replace('/', '-')
+    print name
     if Card.objects.filter(name=name):
         continue
     try:
@@ -57,6 +58,27 @@ for card in cards:
     except AttributeError:
         rules = ''
     manacost = card.find('manacost').text
+    '''print manacost
+    counter = 0
+    colorless = 0
+    cmc = manacost
+    if not cmc:
+        cmc = ""
+    cmc.replace('(2/','w')
+    for c in cmc:
+        if not c in '0123456789wubrg/':
+            cmc.replace(c,'')
+    print cmc
+    for c in cmc:
+        if c in 'wubrg':
+            counter += 1
+        elif c in '0123456789':
+            colorless += 1
+        elif c == '/':
+            counter = counter - 1;
+    if colorless != 0:
+        counter += int(cmc[:colorless])
+    print counter'''
     new_card = Card(name=name,color=color,manacost=manacost,rules=rules,power=power,toughness=toughness)
     new_card.save()
     for s in card.findall('set'):
@@ -72,4 +94,3 @@ for card in cards:
         new_card.super_typing.add(SuperTyping.objects.get_or_create(name=s)[0])
     for s in sub_typing:
         new_card.sub_typing.add(SubTyping.objects.get_or_create(name=s)[0])
-

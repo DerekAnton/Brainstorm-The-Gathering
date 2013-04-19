@@ -13,11 +13,11 @@
           <li><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a></li>
           {% endfor %}
         </ul>
-      </div><!--/span-->
       <form>
         <input type="text" name="new" placeholder="New Deck Name">
         <button class="btn" type="submit" >New Deck</button>
       </form>
+      </div><!--/span-->
       <form>
         <input type="hidden" name="publish" value="1">
         <input type="hidden" name="deck" value={{deck.pk}}>

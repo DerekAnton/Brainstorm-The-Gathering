@@ -38,16 +38,15 @@
 
     </style>
  
-      <form class="form-signin" action="/" method="post">{% csrf_token %}
-        <h2 class="form-signin-heading">Brainstorm: Register</h2>
-        <input type="text" class="input-block-level" placeholder="Email address">
-        <input type="password" class="input-block-level" placeholder="Password">
-        <input type="password" class="input-block-level" placeholder="Re-Type Password">
-        <input type="text" class="input-block-level" placeholder="First Name">
-        <input type="text" class="input-block-level" placeholder="Last Name">
-        <input type="text" class="input-block-level" placeholder="SSN">
+      <form class="form-signin" action="/register/" method="post">{% csrf_token %}
+        <h2 class="form-signin-heading">Brainstorm: Register<br><h4><font color="#ff3333">{{message}}</font></h4></h2>
+        <input name="username" type="text" class="input-block-level" placeholder="Username">
+        <input name="email" type="text" class="input-block-level" placeholder="Email address">
+        <input name="password" type="password" class="input-block-level" placeholder="Password">
+        <input name="password2" type="password" class="input-block-level" placeholder="Re-Type Password">
         <button class="btn btn-medium btn-primary" type="submit">Register!</button>
       </form>
+
 <!--
   <h1>Create an account</h1>
 
