@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import re
 from django.core.management import setup_environ
 import os
 import brainstormtg.settings
@@ -58,17 +58,15 @@ for card in cards:
     except AttributeError:
         rules = ''
     manacost = card.find('manacost').text
-    '''print manacost
+    #print manacost
     counter = 0
     colorless = 0
     cmc = manacost
     if not cmc:
         cmc = ""
-    cmc.replace('(2/','w')
-    for c in cmc:
-        if not c in '0123456789wubrg/':
-            cmc.replace(c,'')
-    print cmc
+    cmc=re.sub(r'\(2/','w',cmc)
+    cmc=re.sub('[^0123456789wubrg/]','',cmc)
+    #print cmc
     for c in cmc:
         if c in 'wubrg':
             counter += 1
@@ -78,8 +76,8 @@ for card in cards:
             counter = counter - 1;
     if colorless != 0:
         counter += int(cmc[:colorless])
-    print counter'''
-    new_card = Card(name=name,color=color,manacost=manacost,rules=rules,power=power,toughness=toughness)
+    #print counter
+    new_card = Card(name=name,color=color,manacost=manacost,rules=rules,power=power,toughness=toughness,cmc=counter)
     new_card.save()
     for s in card.findall('set'):
         _set = s.text

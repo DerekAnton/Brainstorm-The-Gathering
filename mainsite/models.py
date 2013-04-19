@@ -29,7 +29,7 @@ class Card(models.Model):
     typing = models.ManyToManyField('mainsite.Typing')
     sub_typing = models.ManyToManyField('mainsite.SubTyping')
     super_typing = models.ManyToManyField('mainsite.SuperTyping')
-    #cmc = models.IntegerField()
+    cmc = models.IntegerField()
 
     def __unicode__(self):
         return self.name

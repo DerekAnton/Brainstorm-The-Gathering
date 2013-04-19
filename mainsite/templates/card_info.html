@@ -8,11 +8,13 @@
 	<p>{% for set in sets %} <a href="/info/{{set.name}}/{{card.name}}"> {{set.name}} </a> {% endfor %}<p>
 	<img src='{{card_image_url}}'>
 	<p>Color: {{card.color}}</p>
-	<p>Manacost: {{card.manacost}}</p> (CMC: {{ card.cmc }})
+	<p>Manacost: {{card.manacost}} (Converted Mana Cost = {{card.cmc}})</p>
+	{% if isCreature %}
 	<p>Power: {{card.power}}</p>
 	<p>Toughness: {{card.toughness}}</p>
-	{% if card.flavor %}
-	<p id="card_flavor">"{{card.flavor}}"</p>
+	{% endif %}
+	{% if card.rules %}
+	<p>Oracle Text:<br>{{card.rules}}</p>
 	{% endif %}
 	<a href="/favorite/{{card.name}}">Make favorite</a><br>
 	<a id="purchase_link" href="{{ price_url }}">Purchase Card</a>

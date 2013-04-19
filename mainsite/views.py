@@ -224,7 +224,7 @@ def card_info(request, card_name, set_name):
     params2 = {'cn': card_name}
     price_url = 'http://magic.tcgplayer.com/db/magic_single_card.asp?' + urllib.urlencode(params2)
     price_query = urllib.urlencode(params)
-    return render_to_response('card_info.html', {'card': card, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all(), 'price_query': price_query, 'price_url': price_url})
+    return render_to_response('card_info.html', {'card': card, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all(), 'price_query': price_query, 'price_url': price_url, 'isCreature': len(card.typing.filter(name='Creature')) == 1})
 
 def top_decks(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")
