@@ -58,6 +58,7 @@
         <input type="hidden" name="deck" value={{deck.pk}}>
         {% endif %}
         {% if results %}
+        <p><input type="number" min="1" max="99" maxlength="2" name="multiplicity" placeholder="Multiplicity"></p>
         <p><button id="addCard" class="btn btn-primary" type="submit" name="addCardButton" value="deckAdd">Add Card to Deck</button></p>
         <p><button class="btn btn-primary" type="submit" name="addCardButton" value="collectionAdd">Add Card to Collection</button></p>
         <input type="hidden" name="collection" value={{collection.pk}}>  

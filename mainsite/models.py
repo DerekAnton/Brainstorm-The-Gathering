@@ -133,6 +133,9 @@ class Deck(models.Model):
                 card = self.card_counts.get(card=Card.objects.get(name=str))
                 card.multiplicity = num
 
+    def getMultiplicity(self, str):
+        return int(self.card_counts.filter(card=Card.objects.get(name=str)).count())
+
     def format_check(self, format): #returns true if the calling deck is legal in format
         for _card_count in card_counts:
             if _card_count.card in format.banned_cards:

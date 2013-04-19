@@ -54,6 +54,10 @@ def decks(request):
     collectionRemove = request.GET.get('collection_remove')
     removeCardCollection = request.GET.get('removeCardCollection')
     addCardButton = request.GET.get('addCardButton')
+    if request.GET.get('multiplicity'):
+        mult = int(request.GET.get('multiplicity'))
+    else:
+        mult = 1
     userCollection = Collection.objects.all().filter(user=request.user)[0]
     deck = None
 
@@ -63,7 +67,10 @@ def decks(request):
     if selected and addCard and (addCardButton == 'deckAdd'):
         deck = Deck.objects.all().get(pk=selected)
         card = Card.objects.all().get(pk=addCard)
-        deck.addCard(card.name)
+        if mult == 1:
+            deck.addCard(card.name)
+        else:
+            deck.setNumCard(card.name, deck.getMultiplicity(card.name)+mult)
     if (userCollection != None):
         if selected:
             deck = Deck.objects.all().get(pk=selected)
