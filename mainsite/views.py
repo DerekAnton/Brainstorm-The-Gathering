@@ -79,7 +79,10 @@ def decks(request):
             userCollection.cards.remove(card)
         elif addCard and collectionAdd:
             card = Card.objects.all().get(pk=addCard)
-            userCollection.cards.add(card)
+            if mult == 1:
+                userCollection.cards.add(card.name)
+            else:
+                userCollection.cards.setNumCard(card.name, userCollection.getMultiplicity(card.name)+mult)
         elif removeCard and collectionRemove:
             card = Card.objects.all().get(pk=removeCard)
             deck.removeCard(count.card.name)

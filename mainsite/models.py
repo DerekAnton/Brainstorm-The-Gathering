@@ -181,7 +181,10 @@ class PublishedDeck(models.Model):
 
 class Collection(models.Model):
     user = models.ForeignKey(User, primary_key=True)
-    cards = models.ManyToManyField('mainsite.Card')
+    card_counts = models.ManyToManyField('mainsite.CardCount')
+
+    def getMultiplicity(self, str):
+        return int(self.card_counts.filter(card=Card.objects.get(name=str)).count())
 
     def addCard(self, str):  #argument is the name of the card to add
         if(self.card_counts.filter(card=Card.objects.get(name=str)).count() == 0):
