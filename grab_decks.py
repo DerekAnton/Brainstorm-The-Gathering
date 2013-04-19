@@ -4,7 +4,7 @@ import os
 import brainstormtg.settings
 setup_environ(brainstormtg.settings)
 
-from mainsite.models import Card, PublishedDeck, CardCount
+from mainsite.models import Card, PublishedDeck, CardCount, Card_Breakdown
 from django.contrib.auth.models import User
 
 import requests
@@ -48,3 +48,5 @@ for deck_link in deck_links[:8]:
         count = CardCount(card=card, multiplicity=int(card_counts[card_count]))
         count.save()
         deck.card_counts.add(count)
+    breakdown = Card_Breakdown(deck)
+    breakdown.save()

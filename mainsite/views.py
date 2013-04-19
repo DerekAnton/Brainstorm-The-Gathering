@@ -63,33 +63,23 @@ def decks(request):
     if selected and addCard and (addCardButton == 'deckAdd'):
         deck = Deck.objects.all().get(pk=selected)
         card = Card.objects.all().get(pk=addCard)
-        if deck.card_counts.filter(card=card):
-            count = deck.card_counts.get(card=card)
-            count.multiplicity += 1
-            count.save()
-        else:
-            count = CardCount(card=card, multiplicity=1)
-            count.save()
-            deck.card_counts.add(count)
+        deck.addCard(card.name)
     if (userCollection != None):
         if selected:
             deck = Deck.objects.all().get(pk=selected)
         if collectionRemove:
             card = Card.objects.all().get(pk=removeCardCollection)
             userCollection.cards.remove(card)
-        elif addCard:
+        elif addCard and collectionAdd:
             card = Card.objects.all().get(pk=addCard)
             userCollection.cards.add(card)
-        elif removeCard:
-            count = CardCount.objects.all().get(pk=removeCard)
-            if count.multiplicity > 1:
-                count.multiplicity -= 1
-                count.save()
-            else:
-                deck.card_counts.remove(count)
+        elif removeCard and collectionRemove:
+            card = Card.objects.all().get(pk=removeCard)
+            deck.removeCard(count.card.name)
     elif new:
         new = Deck(name=new,user=request.user,created=datetime.now(),description='')
         new.save()
+        decks = Deck.objects.filter(user=request.user)
         deck = None
     elif selected:
         deck = Deck.objects.all().get(pk=selected)
@@ -205,6 +195,8 @@ def register(request):
             if email:
                 newUser.email=email
             newUser.save()
+            coll=Collection(user=newUser)
+            coll.save()
             newUser=authenticate(username=name, password=pw)
             login(request,newUser)
             return HttpResponseRedirect('/')

@@ -65,10 +65,10 @@ for card in cards:
     if not cmc:
         cmc = ""
     cmc=re.sub(r'\(2/','w',cmc)
-    cmc=re.sub('[^0123456789wubrg/]','',cmc)
+    cmc=re.sub('[^0123456789wubrgWUBRG/]','',cmc)
     #print cmc
     for c in cmc:
-        if c in 'wubrg':
+        if c in 'wubrgWUBRG':
             counter += 1
         elif c in '0123456789':
             colorless += 1

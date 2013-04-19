@@ -1,6 +1,7 @@
 from django.db import models
+import re
 from datetime import datetime, tzinfo, timedelta
-
+import unicodedata
 from django.contrib.auth.models import User
 
 class EST(tzinfo):
@@ -101,6 +102,7 @@ class Deck(models.Model):
     def publish(self):
         publishedDeck = PublishedDeck(legacy_legal=self.format_check(Format.objects.get(name=legacy)),vintage_legal=self.format_check(Format.objects.get(name=vintage)),modern_legal=self.format_check(Format.objects.get(name=modern)),standard_legal=self.format_check(Format.objects.get(name=standard)),commander_legal=self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all())
         publishedDeck.save()
+        breakdown = Card_Breakdown(deck=self)
         return publishedDeck
 
     def addCard(self, str):  #argument is the name of the card to add
@@ -215,3 +217,124 @@ class Comment(models.Model):
     published_deck = models.ForeignKey('mainsite.PublishedDeck')
     timestamp = models.DateTimeField()
     message = models.TextField()
+
+class Card_Breakdown(models.Model):
+    #number of cards
+    number_of_cards = models.IntegerField()
+    #mana count
+    
+    #COLORS ARE BASED OFF A STRING
+    red_mana = models.IntegerField()
+    blue_mana = models.IntegerField()
+    green_mana = models.IntegerField()
+    black_mana = models.IntegerField()
+    white_mana = models.IntegerField()
+    colorless_mana = models.IntegerField()
+
+    red = models.IntegerField()
+    blue = models.IntegerField()
+    green = models.IntegerField()
+    black = models.IntegerField()
+    white = models.IntegerField()
+    colorless = models.IntegerField()
+
+
+    #card count types
+    creature_count = models.IntegerField()
+    land_count = models.IntegerField()
+    sorcery_count = models.IntegerField()
+    instant_count = models.IntegerField()
+    enchantment_count = models.IntegerField()
+    planeswalker_count = models.IntegerField()
+
+    #MAPPING FOR MANA_CURVE
+    mana_curve = models.CommaSeparatedIntegerField(max_length=500)
+
+    deck = models.ForeignKey('mainsite.PublishedDeck')
+    #Sub_decks to add
+    
+    
+    def __init__(self, deck):
+        super(Card_Breakdown,self).__init__()
+        self.number_of_cards=0
+        self.red_mana = 0
+        self.blue_mana = 0
+        self.green_mana = 0
+        self.black_mana = 0
+        self.white_mana = 0
+        self.colorless_mana = 0
+
+        self.red = 0
+        self.blue = 0
+        self.green = 0
+        self.black = 0
+        self.white = 0
+        self.colorless = 0
+
+        self.creature_count = 0
+        self.land_count = 0
+        self.sorcery_count = 0
+        self.instant_count = 0
+        self.enchantment_count = 0
+        self.planeswalker_count = 0
+        curve=[0 for index in xrange(19)]
+        for x in deck.card_counts.all():
+            curve[x.card.cmc%20] += 1
+            if x.card.manacost:
+                normal=unicodedata.normalize('NFKD', x.card.manacost).encode('ascii','ignore')
+            else:
+                normal=''
+            #determines the color of the card
+            if x.card.manacost:
+                for z in x.card.manacost:
+                    if z == 'R':
+                        self.red_mana += x.multiplicity
+                    elif z== 'U':
+                        self.blue_mana += x.multiplicity
+                    elif z == 'G':
+                        self.green_mana += x.multiplicity
+                    elif z == 'B':
+                        self.black_mana += x.multiplicity
+                    elif z == 'W':
+                        self.white_mana += x.multiplicity
+
+            if re.sub('[^0123456789]','',normal):
+                self.colorless_mana += int(re.sub('[^0123456789]','',normal))*x.multiplicity
+            #find a way to help out Ai algorithm
+            
+
+            if 'R' in normal:
+                self.red += x.multiplicity
+            if 'U' in normal:
+                self.blue += x.multiplicity
+            if 'G' in normal:
+                self.green += x.multiplicity
+            if 'B' in normal:
+                self.black += x.multiplicity
+            if 'W' in normal:
+                self.white += x.multiplicity
+            if not ('W' in normal or 'U' in normal or 'B' in normal or 'R' in normal or 'G' in normal):
+                self.colorless += x.multiplicity
+            #determines the manacurve of card
+
+            #determines the numbers of types
+            
+            if x.card.typing.filter(name='Land'):
+                self.sorcery_count += x.multiplicity
+            if x.card.typing.filter(name='Creature'):
+                self.creature_count += x.multiplicity
+            if x.card.typing.filter(name='Land'):
+                self.land_count += x.multiplicity
+            if x.card.typing.filter(name='Instant'):
+                self.instant_count += x.multiplicity
+            if x.card.typing.filter(name='Enchantment'):
+                self.enchantment_count += x.multiplicity
+            if x.card.typing.filter(name='Planeswalker'):
+                self.planeswalker_count += x.multiplicity
+
+            self.number_of_cards += x.multiplicity
+
+        self.colorless -= self.land_count      
+        #get number of cards
+        self.mana_curve=str(curve).strip('[]')
+        self.deck=deck;
