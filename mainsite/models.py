@@ -102,7 +102,9 @@ class Deck(models.Model):
     def publish(self):
         publishedDeck = PublishedDeck(legacy_legal=self.format_check(Format.objects.get(name=legacy)),vintage_legal=self.format_check(Format.objects.get(name=vintage)),modern_legal=self.format_check(Format.objects.get(name=modern)),standard_legal=self.format_check(Format.objects.get(name=standard)),commander_legal=self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all())
         publishedDeck.save()
-        breakdown = Card_Breakdown(deck=self)
+        breakdown = Card_Breakdown()
+        breakdown.initialize(publishedDeck)
+        breakdown.save()
         return publishedDeck
 
     def addCard(self, str):  #argument is the name of the card to add
@@ -261,7 +263,7 @@ class Card_Breakdown(models.Model):
     #Sub_decks to add
     
     
-    def __init__(self, deck):
+    def initialize(self, deck):
         super(Card_Breakdown,self).__init__()
         self.number_of_cards=0
         self.red_mana = 0

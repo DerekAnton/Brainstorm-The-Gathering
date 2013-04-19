@@ -48,5 +48,6 @@ for deck_link in deck_links[:8]:
         count = CardCount(card=card, multiplicity=int(card_counts[card_count]))
         count.save()
         deck.card_counts.add(count)
-    breakdown = Card_Breakdown(deck)
+    breakdown = Card_Breakdown()
+    breakdown.initialize(deck)
     breakdown.save()

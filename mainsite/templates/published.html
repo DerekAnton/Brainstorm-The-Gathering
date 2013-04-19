@@ -3,7 +3,51 @@
 
 {% block title %}Deck: {{deck.name}} by {{deck.user.username}}{% endblock %}
 
+{% block head %}
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+      
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+
+      // Callback that creates and populates a data table, 
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+      // Create the data table.
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Color');
+      data.addColumn('number', 'Cards');
+      data.addRows([
+        ['White', {{ breakdown.white }}],
+        ['Blue', {{ breakdown.blue }}],
+        ['Black', {{ breakdown.black }}], 
+        ['Red', {{ breakdown.red }}],
+        ['Green', {{ breakdown.green }}]
+      ]);
+
+      // Set chart options
+      var options = {'title':'Color Distribution',
+                     'width':400,
+                     'height':300,
+                     'colors':['white','blue','black','red','green'],
+                     'pieSliceTextStyle':{color:'#a4a4a4'},
+                     'pieSliceBorderColor':'#a4a4a4'};
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+    </script>
+{% endblock %}
 {% block content %}
+<div class="row">
 <div class="span4">
   <div class="well sidebar-nav">
     <ul class="nav nav-list">  
@@ -26,4 +70,8 @@
     <button class="btn" type="submit">Add Comment!</button>
   </form>
 </div><!--/span-->
+<div class="span4">
+  <div id="chart_div" style="width:400; height:300"></div>
+</div>
+</div>
 {% endblock %}

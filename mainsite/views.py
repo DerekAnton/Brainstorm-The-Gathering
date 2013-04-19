@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.hashers import make_password
-from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set
+from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set, Card_Breakdown
 from bs4 import BeautifulSoup
 import requests
 from django.contrib.auth.models import User
@@ -139,6 +139,7 @@ def published(request, deck_id):
         new_comment.save()
         new_comment = None  
     context = {
+        'breakdown':Card_Breakdown.objects.filter(deck=deck)[0],
         'user':request.user, 
         'description': deck.description, 
         'deck':deck,
