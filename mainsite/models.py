@@ -106,23 +106,24 @@ class Deck(models.Model):
         return publishedDeck
 
     def addCard(self, str):  #argument is the name of the card to add
-        if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
+        self.setNumCard(str=str,num=1)
+        '''if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
             num = self.card_counts.get(card=Card.objects.get(name=str)).multiplicity
             self.card_counts.remove(self.card_counts.get(card=Card.objects.get(name=str)))
             self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),num+1))
         else:
-            self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),1))
+            self.card_counts.add(CardCount.getCardCount(Card.objects.get(name=str),1))'''
 
     def removeCard(self, str): #argument is the name of the card to add
         if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
             self.card_counts.get(card=Card.objects.get(name=str)).delete()
 
     def setNumCard(self, str, num):
-        if (num <= 0):
-            if(self.card_counts.filter(card=Card.objects.get(name=str)).count() != 0):
-                self.card_counts.get(card=Card.objects.get(name=str)).delete()
-        else:
-            if(self.card_counts.filter(card=Card.objects.get(name=str)).count() == 0):
+        self.removeCard(str)
+        if num > 0:
+            cardCount, created = CardCount.objects.get_or_create(card=Card.objects.get(name=str),multiplicity=num)
+            self.card_counts.add(cardCount)
+            '''if(self.card_counts.filter(card=Card.objects.get(name=str)).count() == 0):
                 if (CardCount.objects.filter(card=Card.objects.get(name=str)).filter(multiplicity=num).count() == 0):
                     card = CardCount(card=Card.objects.get(name=str),multiplicity=num)
                     card.save()
@@ -131,7 +132,7 @@ class Deck(models.Model):
                     self.card_counts.add(CardCount.objects.filter(card=Card.objects.get(name=str)).get(multiplicity=num))
             else:
                 card = self.card_counts.get(card=Card.objects.get(name=str))
-                card.multiplicity = num
+                card.multiplicity = num'''
 
     def getMultiplicity(self, str):
         return int(self.card_counts.filter(card=Card.objects.get(name=str)).count())

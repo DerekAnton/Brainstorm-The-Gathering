@@ -58,7 +58,9 @@ def decks(request):
         mult = int(request.GET.get('multiplicity'))
     else:
         mult = 1
-    userCollection = Collection.objects.all().filter(user=request.user)[0]
+    userCollection = None
+    if Collection.objects.filter(user=request.user):
+        userCollection = Collection.objects.all().filter(user=request.user)[0]
     deck = None
 
     #if Collection.objects.all().filter(user=request.user)[0]:
@@ -67,10 +69,7 @@ def decks(request):
     if selected and addCard and (addCardButton == 'deckAdd'):
         deck = Deck.objects.all().get(pk=selected)
         card = Card.objects.all().get(pk=addCard)
-        if mult == 1:
-            deck.addCard(card.name)
-        else:
-            deck.setNumCard(card.name, deck.getMultiplicity(card.name)+mult)
+        deck.setNumCard(card.name, deck.getMultiplicity(card.name)+mult)
     if (userCollection != None):
         if selected:
             deck = Deck.objects.all().get(pk=selected)
@@ -79,16 +78,13 @@ def decks(request):
             userCollection.cards.remove(card)
         elif addCard and collectionAdd:
             card = Card.objects.all().get(pk=addCard)
-            if mult == 1:
-                userCollection.cards.add(card.name)
-            else:
-                userCollection.cards.setNumCard(card.name, userCollection.getMultiplicity(card.name)+mult)
+            userCollection.cards.setNumCard(card.name, userCollection.getMultiplicity(card.name)+mult)
         elif removeCard and collectionRemove:
             card = Card.objects.all().get(pk=removeCard)
             deck.removeCard(count.card.name)
     elif new:
-        new = Deck(name=new,user=request.user,created=datetime.now(),description='')
-        new.save()
+        newDeck = Deck(name=new,user=request.user,created=datetime.now(),description='')
+        newDeck.save()
         decks = Deck.objects.filter(user=request.user)
         deck = None
     elif selected:
@@ -104,12 +100,7 @@ def decks(request):
                 count.save()
                 deck.card_counts.add(count)
         elif removeCard:
-            count = CardCount.objects.all().get(pk=removeCard)
-            if count.multiplicity > 1:
-                count.multiplicity -= 1
-                count.save()
-            else:
-                deck.card_counts.remove(count)
+            deck.removeCard(removeCard.card.name)
         elif publish:
             new = PublishedDeck(name=deck.name,user=request.user,published=datetime.now(),description='',score=0)
             new.save()

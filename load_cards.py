@@ -64,7 +64,7 @@ for card in cards:
     cmc = manacost
     if not cmc:
         cmc = ""
-    cmc=re.sub(r'\(2/','w',cmc)
+    cmc=re.sub(r'\(2/','ww',cmc)
     cmc=re.sub('[^0123456789wubrgWUBRG/]','',cmc)
     #print cmc
     for c in cmc:
