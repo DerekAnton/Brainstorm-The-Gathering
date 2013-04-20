@@ -9,6 +9,25 @@
 	<img src='{{card_image_url}}'>
 	<p>Color: {{card.color}}</p>
 	<p>Manacost: {{card.manacost}} (Converted Mana Cost = {{card.cmc}})</p>
+	{% if supertypes %}
+	<p>Supertypes:<br>
+	{% for type in supertypes %}
+	{{type}}<br>
+	{% endfor %}
+	</p>
+	{% endif %}
+	<p>Types:<br>
+	{% for type in types %}
+	{{type}}<br>
+	{% endfor %}
+	</p>
+	{% if subtypes %}
+	<p>Subtypes:<br>
+	{% for type in subtypes %}
+	{{type}}<br>
+	{% endfor %}
+	</p>
+	{% endif %}
 	{% if isCreature %}
 	<p>Power: {{card.power}}</p>
 	<p>Toughness: {{card.toughness}}</p>

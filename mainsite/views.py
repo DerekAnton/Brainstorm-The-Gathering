@@ -137,7 +137,8 @@ def published(request, deck_id):
     if new_comment:
         new_comment = Comment(user=user, published_deck=deck, timestamp=datetime.now(), message=new_comment)
         new_comment.save()
-        new_comment = None  
+        new_comment = None
+    print 'lands' + str(Card_Breakdown.objects.filter(deck=deck)[0].land_count)
     context = {
         'breakdown':Card_Breakdown.objects.filter(deck=deck)[0],
         'user':request.user, 
@@ -216,9 +217,12 @@ def card_info(request, card_name, set_name):
     _set = Set.objects.get(name=set_name)
     params = {'cards': card_name}
     params2 = {'cn': card_name}
+    types = card.typing.all()
+    supertypes = card.super_typing.all()
+    subtypes = card.sub_typing.all()
     price_url = 'http://magic.tcgplayer.com/db/magic_single_card.asp?' + urllib.urlencode(params2)
     price_query = urllib.urlencode(params)
-    return render_to_response('card_info.html', {'card': card, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all(), 'price_query': price_query, 'price_url': price_url, 'isCreature': len(card.typing.filter(name='Creature')) == 1})
+    return render_to_response('card_info.html', {'supertypes': supertypes, 'subtypes': subtypes, 'card': card, 'types':types, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all(), 'price_query': price_query, 'price_url': price_url, 'isCreature': len(card.typing.filter(name='Creature')) == 1})
 
 def top_decks(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")

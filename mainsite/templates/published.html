@@ -8,17 +8,21 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
     
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawCharts);
+
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart']});
-      
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
 
+      function drawCharts() {
+        colorDistribution();
+        cardTypes();
+      }
 
       // Callback that creates and populates a data table, 
       // instantiates the pie chart, passes in the data and
       // draws it.
-      function drawChart() {
+      function colorDistribution() {
 
       // Create the data table.
       var data = new google.visualization.DataTable();
@@ -38,12 +42,47 @@
                      'height':300,
                      'colors':['white','blue','black','red','green'],
                      'pieSliceTextStyle':{color:'#a4a4a4'},
-                     'pieSliceBorderColor':'#a4a4a4'};
+                     'pieSliceBorderColor':'#a4a4a4',
+                     'legend':{position:'none'},
+                     'titleTextStyle':{fontSize:20}
+                   };
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      var chart = new google.visualization.PieChart(document.getElementById('color_div'));
       chart.draw(data, options);
     }
+
+      function cardTypes() {
+
+      // Create the data table.
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Type');
+      data.addColumn('number', 'Cards');
+      data.addRows([
+        ['Creature', {{ breakdown.creature_count }}],
+        ['Land', {{ breakdown.land_count }}],
+        ['Sorcery', {{ breakdown.sorcery_count }}],
+        ['Instant', {{ breakdown.instant_count }}],
+        ['Enchantment', {{ breakdown.enchantment_count }}],
+        ['Artifact', {{ breakdown.artifact_count }}],
+        ['Planeswalker', {{ breakdown.planeswalker_count }}]
+      ]);
+
+      // Set chart options
+      var options = {'title':'Card Types',
+                     'width':400,
+                     'height':300,
+                     'colors':['#1f9400','#394611','#e00707','#4876b9','#ffc726','#C0C0C0','#ff7300'],
+                     'pieSliceTextStyle':{color:'black'},
+                     'pieSliceBorderColor':'#a4a4a4',
+                     'titleTextStyle':{fontSize:20}
+                   };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.PieChart(document.getElementById('types_div'));
+      chart.draw(data, options);
+    }
+
     </script>
 {% endblock %}
 {% block content %}
@@ -71,7 +110,8 @@
   </form>
 </div><!--/span-->
 <div class="span4">
-  <div id="chart_div" style="width:400; height:300"></div>
+  <div id="color_div" style="width:400; height:300"></div>
+  <div id="types_div" style="width:400; height:300"></div>
 </div>
 </div>
 {% endblock %}

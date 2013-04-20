@@ -328,7 +328,7 @@ class Card_Breakdown(models.Model):
 
             #determines the numbers of types
             
-            if x.card.typing.filter(name='Land'):
+            if x.card.typing.filter(name='Sorcery'):
                 self.sorcery_count += x.multiplicity
             if x.card.typing.filter(name='Creature'):
                 self.creature_count += x.multiplicity
