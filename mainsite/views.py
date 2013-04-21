@@ -138,6 +138,7 @@ def published(request, deck_id):
         new_comment = Comment(user=user, published_deck=deck, timestamp=datetime.now(), message=new_comment)
         new_comment.save()
         new_comment = None
+    print 'creatures' + str(Card_Breakdown.objects.filter(deck=deck)[0].creature_count)
     print 'lands' + str(Card_Breakdown.objects.filter(deck=deck)[0].land_count)
     context = {
         'breakdown':Card_Breakdown.objects.filter(deck=deck)[0],

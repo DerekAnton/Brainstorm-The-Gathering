@@ -254,6 +254,7 @@ class Card_Breakdown(models.Model):
     sorcery_count = models.IntegerField()
     instant_count = models.IntegerField()
     enchantment_count = models.IntegerField()
+    artifact_count = models.IntegerField()
     planeswalker_count = models.IntegerField()
 
     #MAPPING FOR MANA_CURVE
@@ -285,6 +286,7 @@ class Card_Breakdown(models.Model):
         self.sorcery_count = 0
         self.instant_count = 0
         self.enchantment_count = 0
+        self.artifact_count = 0
         self.planeswalker_count = 0
         curve=[0 for index in xrange(19)]
         for x in deck.card_counts.all():
@@ -336,6 +338,8 @@ class Card_Breakdown(models.Model):
                 self.land_count += x.multiplicity
             if x.card.typing.filter(name='Instant'):
                 self.instant_count += x.multiplicity
+            if x.card.typing.filter(name='Artifact'):
+                self.artifact_count += x.multiplicity
             if x.card.typing.filter(name='Enchantment'):
                 self.enchantment_count += x.multiplicity
             if x.card.typing.filter(name='Planeswalker'):
