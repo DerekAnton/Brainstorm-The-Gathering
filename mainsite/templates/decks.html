@@ -6,9 +6,9 @@
   {% block content %}
   <style>
     table{
-        text-align:right;
-        vertical-align: bottom;
-      }
+      text-align:right;
+      vertical-align: bottom;
+    }
   </style>
   <div class="row">
     <div class="span3">
@@ -18,9 +18,13 @@
           <form>
             <table>
               {% for deck in decks %}
+              {% for key, value in deckSizes.items %}
+              {% ifequal deck.pk key %}
               <tr>
-                <td><button class="btn" type="submit" name="deck_delete" value="{{ deck.pk }}">Delete Deck</button></td><td><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a></td>
+                <td><button class="btn" type="submit" name="deck_delete" value="{{ deck.pk }}">Delete</button></td><td><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a> ({{ value }} cards)</td>
               </tr>
+              {% endifequal %}
+              {% endfor %}
               {% endfor %}
             </table>
           </form>
@@ -35,17 +39,17 @@
         <input type="hidden" name="deck" value={{deck.pk}}>
         <button class="btn" type="submit">Pubish</button>
       </form>
-       <div class="well sidebar-nav"> 
+      <div class="well sidebar-nav"> 
         <ul class="nav nav-list">  
-            <li class="nav-header">My Collection</li>
-            {% if collection %}
-            <form>
-              <button class="btn" type="submit" name="collection_remove" value="1">Remove Card</button>
-              {% for card in collection.cards.all %}
-              <li><input type="radio" name="removeCardCollection" value="{{card.pk}}"><a href="{{card.get_absolute_url}}">{{ card.name }}</a></li>
-              {% endfor %}
-            </form>
-            {% endif %}
+          <li class="nav-header">My Collection</li>
+          {% if collection %}
+          <form>
+            <button class="btn" type="submit" name="collection_remove" value="1">Remove Card</button>
+            {% for card in collection.cards.all %}
+            <li><input type="radio" name="removeCardCollection" value="{{card.pk}}"><a href="{{card.get_absolute_url}}">{{ card.name }}</a></li>
+            {% endfor %}
+          </form>
+          {% endif %}
         </ul>
       </div>
     </div><!--/.well -->
@@ -91,15 +95,13 @@
           <ul class="nav nav-list">  
             <li class="nav-header">{{ deck.name }}</li>
             {% for card_count in deck.card_counts.all %}
-            <li><input type="radio" name="removeCard" value="{{card_count.pk}}"><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}</li>
+            <input type="radio" name="removeCard" value="{{card_count.pk}}"><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }} <br>
             {% endfor %}
           </ul>
         </div><!--/.well -->
         {% endif %}
-       </div><!--/span-->
-     </form>
-   </div>
- </div>
-</div>
+      </div><!--/span-->
+    </form>
+  </div>
 
 {% endblock %}
