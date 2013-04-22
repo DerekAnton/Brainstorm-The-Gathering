@@ -65,23 +65,6 @@ def decks(request):
         new = Collection(user=request.user)
         new.save()
         userCollection = new
-
-    if (userCollection != None):
-        #if selected:
-        #    deck = Deck.objects.all().get(pk=selected)
-        if collectionRemove:
-            card = Card.objects.all().get(pk=removeCardCollection)
-            userCollection.cards.remove(card)
-        #elif addCard and (addCardButton == 'collectionAdd'):
-        #    card = Card.objects.all().get(pk=addCard)
-        #    userCollection.cards.add(card)
-        #elif removeCard:
-        #    count = CardCount.objects.all().get(pk=removeCard)
-        #    if count.multiplicity > 1:
-        #        count.multiplicity -= 1
-        #        count.save()
-        #    else:
-        #        deck.card_counts.remove(count)
     if new:
         new = Deck(name=new,user=request.user,created=datetime.now(),description='')
         new.save()
