@@ -229,42 +229,43 @@ class Comment(models.Model):
 
 class Card_Breakdown(models.Model):
     #number of cards
-    number_of_cards = models.IntegerField()
+    number_of_cards = models.IntegerField(default=0)
     #mana count
     
     #COLORS ARE BASED OFF A STRING
-    red_mana = models.IntegerField()
-    blue_mana = models.IntegerField()
-    green_mana = models.IntegerField()
-    black_mana = models.IntegerField()
-    white_mana = models.IntegerField()
-    colorless_mana = models.IntegerField()
+    red_mana = models.IntegerField(default=0)
+    blue_mana = models.IntegerField(default=0)
+    green_mana = models.IntegerField(default=0)
+    black_mana = models.IntegerField(default=0)
+    white_mana = models.IntegerField(default=0)
+    colorless_mana = models.IntegerField(default=0)
 
-    red = models.IntegerField()
-    blue = models.IntegerField()
-    green = models.IntegerField()
-    black = models.IntegerField()
-    white = models.IntegerField()
-    colorless = models.IntegerField()
+    red = models.IntegerField(default=0)
+    blue = models.IntegerField(default=0)
+    green = models.IntegerField(default=0)
+    black = models.IntegerField(default=0)
+    white = models.IntegerField(default=0)
+    colorless = models.IntegerField(default=0)
 
 
     #card count types
-    creature_count = models.IntegerField()
-    land_count = models.IntegerField()
-    sorcery_count = models.IntegerField()
-    instant_count = models.IntegerField()
-    enchantment_count = models.IntegerField()
-    artifact_count = models.IntegerField()
-    planeswalker_count = models.IntegerField()
+    creature_count = models.IntegerField(default=0)
+    land_count = models.IntegerField(default=0)
+    sorcery_count = models.IntegerField(default=0)
+    instant_count = models.IntegerField(default=0)
+    enchantment_count = models.IntegerField(default=0)
+    artifact_count = models.IntegerField(default=0)
+    planeswalker_count = models.IntegerField(default=0)
 
     #MAPPING FOR MANA_CURVE
-    mana_curve = models.CommaSeparatedIntegerField(max_length=500)
+    mana_curve = models.CommaSeparatedIntegerField(max_length=500, default='0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0')
 
     deck = models.ForeignKey('mainsite.PublishedDeck')
     #Sub_decks to add
     
     
     def initialize(self, deck):
+        print self.mana_curve
         super(Card_Breakdown,self).__init__()
         self.number_of_cards=0
         self.red_mana = 0
@@ -290,7 +291,7 @@ class Card_Breakdown(models.Model):
         self.planeswalker_count = 0
         curve=[0 for index in xrange(19)]
         for x in deck.card_counts.all():
-            curve[x.card.cmc%20] += 1
+            curve[x.card.cmc%20] += x.multiplicity
             if x.card.manacost:
                 normal=unicodedata.normalize('NFKD', x.card.manacost).encode('ascii','ignore')
             else:
@@ -347,7 +348,9 @@ class Card_Breakdown(models.Model):
 
             self.number_of_cards += x.multiplicity
 
-        self.colorless -= self.land_count      
+        self.colorless -= self.land_count
+        curve[0] -= self.land_count
         #get number of cards
         self.mana_curve=str(curve).strip('[]')
+        print self.mana_curve
         self.deck=deck;

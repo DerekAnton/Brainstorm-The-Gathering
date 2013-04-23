@@ -17,6 +17,7 @@
       function drawCharts() {
         colorDistribution();
         cardTypes();
+        curve();
       }
 
       // Callback that creates and populates a data table, 
@@ -33,14 +34,15 @@
         ['Blue', {{ breakdown.blue }}],
         ['Black', {{ breakdown.black }}], 
         ['Red', {{ breakdown.red }}],
-        ['Green', {{ breakdown.green }}]
+        ['Green', {{ breakdown.green }}],
+        ['Colorless', {{ breakdown.colorless }}]
       ]);
 
       // Set chart options
       var options = {'title':'Color Distribution',
                      'width':400,
                      'height':300,
-                     'colors':['white','blue','black','red','green'],
+                     'colors':['white','blue','black','red','green', '#442200'],
                      'pieSliceTextStyle':{color:'#a4a4a4'},
                      'pieSliceBorderColor':'#a4a4a4',
                      'legend':{position:'none'},
@@ -82,7 +84,49 @@
       var chart = new google.visualization.PieChart(document.getElementById('types_div'));
       chart.draw(data, options);
     }
+      function curve() {
+        var curveArray = new Array();
+        curveArray = [
+          ['Cost', 'Number of Cards'],
+          ['0', {{var0}}],
+          ['1', {{var1}}],
+          ['2', {{var2}}],
+          ['3', {{var3}}],
+          ['4', {{var4}}],
+          ['5', {{var5}}],
+          ['6', {{var6}}],
+          ['7', {{var7}}],
+          ['8', {{var8}}],
+          ['9', {{var9}}],
+          ['10', {{var10}}],
+          ['11', {{var11}}],
+          ['12', {{var12}}],
+          ['13', {{var13}}],
+          ['14', {{var14}}],
+          ['15', {{var15}}],
+          ['16', {{var16}}],
+          ['17', {{var17}}],
+          ['18', {{var18}}]
+        ];
+        var i = curveArray.length - 1;
+        for (i = curveArray.length - 1; i > 0; i--){
+          if (curveArray[i][1] != 0){
+            break;
+          }
+        }
+        curveArray.splice(i+1, curveArray.length - 1);
+        var data = google.visualization.arrayToDataTable(curveArray);
 
+        var options = {
+          title: 'Mana Curve',
+          hAxis: {title: 'Manacost'},
+          width: 400,
+          height: 300
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('curve_div'));
+        chart.draw(data, options);
+      }
     </script>
 {% endblock %}
 {% block content %}
@@ -92,7 +136,7 @@
     <ul class="nav nav-list">  
       <li class="nav-header">{{deck.name}} by <a href="/profile/{{deck.user.username}}">{{deck.user.username}}</a></li>
       {% for card_count in card_counts.all %}
-      <li><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}</li>
+      <a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}<br>
       {% endfor %}
     </ul>
   </div><!--/.well -->
@@ -109,9 +153,10 @@
     <button class="btn" type="submit">Add Comment!</button>
   </form>
 </div><!--/span-->
-<div class="span4">
+<div class="span8">
   <div id="color_div" style="width:400; height:300"></div>
   <div id="types_div" style="width:400; height:300"></div>
+  <div id="curve_div" style="width:400; height:300"></div>
 </div>
 </div>
 {% endblock %}

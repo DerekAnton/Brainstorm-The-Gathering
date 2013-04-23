@@ -1,39 +1,55 @@
-  {% extends "base.html" %}
+{% extends "base.html" %}
   {% load url from future %}
 
   {% block title %}Home{% endblock %}
 
   {% block content %}
+  <style>
+    table{
+      text-align:right;
+      vertical-align: bottom;
+    }
+  </style>
   <div class="row">
     <div class="span3">
       <div class="well sidebar-nav">
         <ul class="nav nav-list">  
           <li class="active"><a href="#">My Decks</a></li>
-          {% for deck in decks %}
-          <li><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a></li>
-          {% endfor %}
+          <form>
+            <table>
+              {% for deck in decks %}
+              {% for key, value in deckSizes.items %}
+              {% ifequal deck.pk key %}
+              <tr>
+                <td><button class="btn" type="submit" name="deck_delete" value="{{ deck.pk }}">Delete</button></td><td><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a> ({{ value }} cards)</td>
+              </tr>
+              {% endifequal %}
+              {% endfor %}
+              {% endfor %}
+            </table>
+          </form>
         </ul>
+      </div><!--/span-->
       <form>
         <input type="text" name="new" placeholder="New Deck Name">
         <button class="btn" type="submit" >New Deck</button>
       </form>
-      </div><!--/span-->
       <form>
         <input type="hidden" name="publish" value="1">
         <input type="hidden" name="deck" value={{deck.pk}}>
         <button class="btn" type="submit">Pubish</button>
       </form>
-       <div class="well sidebar-nav"> 
+      <div class="well sidebar-nav"> 
         <ul class="nav nav-list">  
-            <li class="nav-header">My Collection</li>
-            {% if collection %}
-            <form>
-              <button class="btn" type="submit" name="collection_remove" value="1">Remove Card</button>
-              {% for card in collection.cards.all %}
-              <li><input type="radio" name="removeCardCollection" value="{{card.pk}}"><a href="{{card.get_absolute_url}}">{{ card.name }}</a></li>
-              {% endfor %}
-            </form>
-            {% endif %}
+          <li class="nav-header">My Collection</li>
+          {% if collection %}
+          <form>
+            <button class="btn" type="submit" name="collection_remove" value="1">Remove Card</button>
+            {% for card_count in collection.card_counts.all %}
+            <br><input type="radio" name="removeCardCollection" value="{{card_count.card.pk}}"><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x{{card_count.multiplicity}}
+            {% endfor %}
+          </form>
+          {% endif %}
         </ul>
       </div>
     </div><!--/.well -->
@@ -58,12 +74,9 @@
         <input type="hidden" name="deck" value={{deck.pk}}>
         {% endif %}
         {% if results %}
-        <p><input type="number" min="1" max="99" maxlength="2" name="multiplicity" placeholder="Multiplicity"></p>
         <p><button id="addCard" class="btn btn-primary" type="submit" name="addCardButton" value="deckAdd">Add Card to Deck</button></p>
-        {% if collection %}
-        <p><button id="addCard" class="btn btn-primary" type="submit" name="addCardButton" value="collectionAdd">Add Card to Collection</button></p>
-        <input type="hidden" name="collection" value={{collection.pk}}>
-        {% endif %}
+        <p><button class="btn btn-primary" type="submit" name="addCardButton" value="collectionAdd">Add Card to Collection</button></p>
+        <input type="hidden" name="collection" value={{collection.pk}}>  
         {% endif %}
         {% for card in results %}
         <input type="radio" name="addCard" value="{{card.object.pk}}"><a href="{{card.object.get_absolute_url}}">{{ card.object.name }}</a> <br>
@@ -77,18 +90,18 @@
         <p><button id="removeCard" class="btn btn-primary">Remove Card</button></p>  {%endif%}
       </div>
       <div class="span4">
+        {% if deck %}
         <div class="well sidebar-nav">
           <ul class="nav nav-list">  
-            <li class="nav-header">Name of Deck</li>
+            <li class="nav-header">{{ deck.name }}</li>
             {% for card_count in deck.card_counts.all %}
-            <li><input type="radio" name="removeCard" value="{{card_count.pk}}"><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}</li>
+            <input type="radio" name="removeCard" value="{{card_count.pk}}"><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }} <br>
             {% endfor %}
           </ul>
         </div><!--/.well -->
-       </div><!--/span-->
-     </form>
-   </div>
- </div>
-</div>
+        {% endif %}
+      </div><!--/span-->
+    </form>
+  </div>
 
 {% endblock %}
