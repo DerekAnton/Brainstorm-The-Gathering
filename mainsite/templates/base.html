@@ -56,6 +56,7 @@
         {% if user.is_authenticated %}
         <li><a href="/profile/{{user.username}}">Profile</a></li>
  		<li><a href="/decks">My Decks</a></li>
+		<li><a href="/simulate">Simulate</a></li>
          <li><a href="/logout">Logout</a></li>
          {% else %}
               <li><a href="/login">Login</a></li>

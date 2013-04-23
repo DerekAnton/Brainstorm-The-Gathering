@@ -1,0 +1,26 @@
+% extends "base.html" %}
+{% load url from future %}
+
+{% block title %}Simulate{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <ul class="nav nav-list">  
+          <li class="active"><a href="#">My Decks</a></li>
+          {% for deck in decks %}
+          <li><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a></li>
+          {% endfor %}
+        </ul>
+  <h1>SIMULATE</h1>
+   <img src="favorite">
+   <img src="favorite">
+   <img src="favorite">
+   <img src="favorite">
+   <img src="favorite">
+   <img src="favorite">
+   <img src="favorite">
+
+<button class="btn" type="submit" >New Hand</button>
+% endblock %}
