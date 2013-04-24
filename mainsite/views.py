@@ -31,6 +31,9 @@ def index(request):
 def about(request):
     return render_to_response('about.html', {'user': request.user})
 
+def simulate(request):
+    return render_to_response('simulate.html', {'user': request.user})
+
 def profile(request, username):
     user = User.objects.all().get(username=username)
     if FavoriteCard.objects.all().filter(user=user):
