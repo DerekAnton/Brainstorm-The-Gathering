@@ -47,14 +47,17 @@ def decks(request):
     decks = Deck.objects.filter(user=request.user)
     collection = request.GET.get('collection')
     selected = request.GET.get('deck')
-    addCard = request.GET.get('addCard')
+    #addCard = request.GET.get('addCard')
     removeCard = request.GET.get('removeCard')
+    decriment = request.GET.get('decriment')
+    decrimentCollection = request.GET.get('decrimentCollection')
     new = request.GET.get('new')
     publish = request.GET.get('publish')
     collectionAdd = request.GET.get('collectionAdd')
-    collectionRemove = request.GET.get('collection_remove')
+    #collectionRemove = request.GET.get('collection_remove')
     removeCardCollection = request.GET.get('removeCardCollection')
-    addCardButton = request.GET.get('addCardButton')
+    deckAdd = request.GET.get('deckAdd')
+    collectionAdd = request.GET.get('collectionAdd')
     delete_deck = request.GET.get('deck_delete')
     query = request.GET.get('query')
     deck = None
@@ -72,9 +75,12 @@ def decks(request):
         deck = None
     elif selected:
         deck = Deck.objects.all().get(pk=selected)
-        if addCard:
-            card = Card.objects.all().get(pk=addCard)
-            if addCardButton == 'deckAdd':
+        if deckAdd or collectionAdd:
+            if deckAdd:
+                card = Card.objects.all().get(pk=deckAdd)
+            else:
+                card = Card.objects.all().get(pk=collectionAdd)
+            if deckAdd:
                 if deck.card_counts.filter(card=card):
                     count = deck.card_counts.get(card=card)
                     count.multiplicity += 1
@@ -83,15 +89,18 @@ def decks(request):
                     count = CardCount(card=card, multiplicity=1)
                     count.save()
                     deck.card_counts.add(count)
-            elif addCardButton == 'collectionAdd':
+            elif collectionAdd:
                 userCollection.cards.add(card)
-        if removeCard:
-            count = CardCount.objects.all().get(pk=removeCard)
+        if decriment:
+            count = deck.card_counts.get(pk=decriment)
             if count.multiplicity > 1:
                 count.multiplicity -= 1
                 count.save()
             else:
                 deck.card_counts.remove(count)
+        if removeCard:
+            count = CardCount.objects.all().get(pk=removeCard)
+            deck.card_counts.remove(count)
         if publish:
             new = PublishedDeck(name=deck.name,user=request.user,published=datetime.now(),description='',score=0)
             new.save()
@@ -103,8 +112,8 @@ def decks(request):
             breakdown = Card_Breakdown(deck=new, number_of_cards=0)
             breakdown.initialize(new)
             breakdown.save()
-    elif addCardButton == 'collectionAdd' and addCard:
-        card = Card.objects.all().get(pk=addCard)
+    elif collectionAdd:
+        card = Card.objects.all().get(pk=collectionAdd)
         if not userCollection.card_counts.filter(card=card):
             userCollection.card_counts.add(CardCount.objects.get_or_create(card=card, multiplicity=1)[0])
         else:
@@ -112,9 +121,16 @@ def decks(request):
             if userCollection.card_counts.filter(card=card):
                 userCollection.card_counts.remove(userCollection.card_counts.filter(card=card)[0])
             userCollection.card_counts.add(CardCount.objects.get_or_create(card=card, multiplicity=multiplicity)[0])
-    elif collectionRemove:
+    elif removeCardCollection:
         if userCollection.card_counts.filter(card=Card.objects.filter(name=removeCardCollection)[0]):
             userCollection.card_counts.remove(userCollection.card_counts.filter(card=Card.objects.filter(name=removeCardCollection)[0])[0])
+    elif decrimentCollection:
+        count = userCollection.card_counts.get(pk=decrimentCollection)
+        if count.multiplicity > 1:
+            count.multiplicity -= 1
+            count.save()
+        else:
+            userCollection.card_counts.remove(count)
     if query:
         results = SearchQuerySet().filter(content=query)
     else:

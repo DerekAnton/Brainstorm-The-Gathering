@@ -11,7 +11,7 @@
     }
   </style>
   <div class="row">
-    <div class="span3">
+    <div class="span4">
       <div class="well sidebar-nav">
         <ul class="nav nav-list">  
           <li class="active"><a href="#">My Decks</a></li>
@@ -43,18 +43,18 @@
         <ul class="nav nav-list">  
           <li class="nav-header">My Collection</li>
           {% if collection %}
+          {% for card_count in collection.card_counts.all %}
           <form>
-            <button class="btn" type="submit" name="collection_remove" value="1">Remove Card</button>
-            {% for card_count in collection.card_counts.all %}
-            <br><input type="radio" name="removeCardCollection" value="{{card_count.card.pk}}"><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x{{card_count.multiplicity}}
-            {% endfor %}
+            <button class="btn-mini" type="submit" name="collectionAdd" value="{{card_count.card.pk}}">+</button><button class="btn-mini" type="submit" name="decrimentCollection" value="{{card_count.pk}}">-</button><button class="btn-mini" type="submit" name="removeCardCollection" value="{{card_count.card.name}}">Remove</button>
+            <!--<input type="radio" name="removeCardCollection" value="{{card_count.card.pk}}">--><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x{{card_count.multiplicity}}<br>
           </form>
+          {% endfor %}
           {% endif %}
         </ul>
       </div>
     </div><!--/.well -->
 
-    <div class="span3">
+    <div class="span4">
       {% if deck %}
       <p>Editing {{deck.name}}</p>
       {% endif %}
@@ -74,28 +74,24 @@
         <input type="hidden" name="deck" value={{deck.pk}}>
         {% endif %}
         {% if results %}
-        <p><button id="addCard" class="btn btn-primary" type="submit" name="addCardButton" value="deckAdd">Add Card to Deck</button></p>
-        <p><button class="btn btn-primary" type="submit" name="addCardButton" value="collectionAdd">Add Card to Collection</button></p>
         <input type="hidden" name="collection" value={{collection.pk}}>  
         {% endif %}
         {% for card in results %}
-        <input type="radio" name="addCard" value="{{card.object.pk}}"><a href="{{card.object.get_absolute_url}}">{{ card.object.name }}</a> <br>
+        {% if deck %}
+        <button id="addCard" class="btn-mini" type="submit" name="deckAdd" value="{{card.object.pk}}">+Deck</button>
+        {% endif %}<button class="btn-mini" type="submit" name="collectionAdd" value="{{card.object.pk}}">+Collection</button><a href="{{card.object.get_absolute_url}}">{{ card.object.name }}</a> <br>
         {% endfor %}
       </form>
     </div>
     <form>
       <input type="hidden" name="deck" value={{deck.pk}}>
-      <div class="span1">
-        {% if deck %}
-        <p><button id="removeCard" class="btn btn-primary">Remove Card</button></p>  {%endif%}
-      </div>
       <div class="span4">
         {% if deck %}
         <div class="well sidebar-nav">
           <ul class="nav nav-list">  
             <li class="nav-header">{{ deck.name }}</li>
             {% for card_count in deck.card_counts.all %}
-            <input type="radio" name="removeCard" value="{{card_count.pk}}"><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }} <br>
+            <button id="addCard" class="btn-mini" type="submit" name="deckAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn-mini" name="decriment" value="{{card_count.pk}}">-</button><button class="btn-mini" name="removeCard" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }} <br>
             {% endfor %}
           </ul>
         </div><!--/.well -->
