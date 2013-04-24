@@ -90,7 +90,14 @@ def decks(request):
                     count.save()
                     deck.card_counts.add(count)
             elif collectionAdd:
-                userCollection.cards.add(card)
+                if userCollection.card_counts.filter(card=card):
+                    count = userCollection.card_counts.get(card=card)
+                    count.multiplicity += 1
+                    count.save()
+                else:
+                    count = CardCount(card=card, multiplicity=1)
+                    count.save()
+                    deck.card_counts.add(count)
         if decriment:
             count = deck.card_counts.get(pk=decriment)
             if count.multiplicity > 1:
