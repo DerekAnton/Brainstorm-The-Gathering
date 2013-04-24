@@ -97,7 +97,8 @@ class Deck(models.Model):
     user = models.ForeignKey(User)
     created = models.DateTimeField('datetime.now(EST())')
     description = models.TextField()
-    card_counts = models.ManyToManyField('mainsite.CardCount')
+    card_counts = models.ManyToManyField('mainsite.CardCount',related_name='md')
+    sb_counts = models.ManyToManyField('mainsite.CardCount',related_name='sb')
 
     def publish(self):
         publishedDeck = PublishedDeck(legacy_legal=self.format_check(Format.objects.get(name=legacy)),vintage_legal=self.format_check(Format.objects.get(name=vintage)),modern_legal=self.format_check(Format.objects.get(name=modern)),standard_legal=self.format_check(Format.objects.get(name=standard)),commander_legal=self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all())
@@ -159,7 +160,8 @@ class PublishedDeck(models.Model):
     user = models.ForeignKey(User)
     published = models.DateTimeField()
     description = models.TextField()
-    card_counts = models.ManyToManyField('mainsite.CardCount')
+    card_counts = models.ManyToManyField('mainsite.CardCount',related_name='mdPub')
+    sb_counts = models.ManyToManyField('mainsite.CardCount',related_name='sbPub')
     legacy_legal = models.BooleanField()
     vintage_legal = models.BooleanField()
     modern_legal = models.BooleanField()

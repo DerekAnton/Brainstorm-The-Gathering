@@ -138,6 +138,10 @@
       {% for card_count in card_counts.all %}
       <a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}<br>
       {% endfor %}
+      <p><li class="nav-header">Sideboard</li></p>
+      {% for card_count in sb_counts.all %}
+      <a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}<br>
+      {% endfor %}
     </ul>
   </div><!--/.well -->
   <ul id="comment_list">

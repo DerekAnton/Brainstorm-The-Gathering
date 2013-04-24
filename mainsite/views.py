@@ -32,7 +32,7 @@ def about(request):
     return render_to_response('about.html', {'user': request.user})
 
 def simulate(request):
-    return render_to_response('simulate.html', {'user': request.user})
+    return render_to_response('simulate.html', {'user': request.user, 'decks':Deck.objects.filter(user=request.user)})
 
 def profile(request, username):
     user = User.objects.all().get(username=username)
@@ -47,16 +47,25 @@ def profile(request, username):
     return render_to_response('profile.html', context)
 
 def decks(request):
+    multiplicity = request.GET.get('multiplicity')
+    sbMultiplicity = request.GET.get('sbMultiplicity')
+    collectionMultiplicity = request.GET.get('collectionMultiplicity')
+    deckSet = request.GET.get('deckSet')
+    collectionSet = request.GET.get('collectionSet')
+    sbSet = request.GET.get('sbSet')
     decks = Deck.objects.filter(user=request.user)
     collection = request.GET.get('collection')
     selected = request.GET.get('deck')
     #addCard = request.GET.get('addCard')
     removeCard = request.GET.get('removeCard')
+    removeCardSb = request.GET.get('removeCardSb')
     decriment = request.GET.get('decriment')
     decrimentCollection = request.GET.get('decrimentCollection')
+    decrimentSb = request.GET.get('decrimentSb')
     new = request.GET.get('new')
     publish = request.GET.get('publish')
     collectionAdd = request.GET.get('collectionAdd')
+    sbAdd = request.GET.get('sbAdd')
     #collectionRemove = request.GET.get('collection_remove')
     removeCardCollection = request.GET.get('removeCardCollection')
     deckAdd = request.GET.get('deckAdd')
@@ -78,11 +87,13 @@ def decks(request):
         deck = None
     elif selected:
         deck = Deck.objects.all().get(pk=selected)
-        if deckAdd or collectionAdd:
+        if deckAdd or collectionAdd or sbAdd:
             if deckAdd:
                 card = Card.objects.all().get(pk=deckAdd)
-            else:
+            elif collectionAdd:
                 card = Card.objects.all().get(pk=collectionAdd)
+            else:
+                card = Card.objects.all().get(pk=sbAdd)
             if deckAdd:
                 if deck.card_counts.filter(card=card):
                     count = deck.card_counts.get(card=card)
@@ -100,7 +111,16 @@ def decks(request):
                 else:
                     count = CardCount(card=card, multiplicity=1)
                     count.save()
-                    deck.card_counts.add(count)
+                    userCollection.card_counts.add(count)
+            elif sbAdd:
+                if deck.sb_counts.filter(card=card):
+                    count = deck.sb_counts.get(card=card)
+                    count.multiplicity += 1
+                    count.save()
+                else:
+                    count = CardCount(card=card, multiplicity=1)
+                    count.save()
+                    deck.sb_counts.add(count)
         if decriment:
             count = deck.card_counts.get(pk=decriment)
             if count.multiplicity > 1:
@@ -108,9 +128,19 @@ def decks(request):
                 count.save()
             else:
                 deck.card_counts.remove(count)
+        if decrimentSb:
+            count = deck.sb_counts.get(pk=decrimentSb)
+            if count.multiplicity > 1:
+                count.multiplicity -= 1
+                count.save()
+            else:
+                deck.sb_counts.remove(count)
         if removeCard:
             count = CardCount.objects.all().get(pk=removeCard)
             deck.card_counts.remove(count)
+        if removeCardSb:
+            count = CardCount.objects.all().get(pk=removeCardSb)
+            deck.sb_counts.remove(count)
         if publish:
             new = PublishedDeck(name=deck.name,user=request.user,published=datetime.now(),description='',score=0)
             new.save()
@@ -118,6 +148,11 @@ def decks(request):
                 new_count = CardCount(card=count.card, multiplicity=count.multiplicity)
                 new_count.save()
                 new.card_counts.add(new_count)
+            new.save()
+            for count in deck.sb_counts.all():
+                new_count = CardCount(card=count.card, multiplicity=count.multiplicity)
+                new_count.save()
+                new.sb_counts.add(new_count)
             new.save()
             breakdown = Card_Breakdown(deck=new, number_of_cards=0)
             breakdown.initialize(new)
@@ -141,6 +176,18 @@ def decks(request):
             count.save()
         else:
             userCollection.card_counts.remove(count)
+    elif collectionSet:
+        count = userCollection.card_counts.get(pk=collectionSet)
+        count.multiplicity = collectionMultiplicity
+        count.save()
+    elif deckSet:
+        count = CardCount.objects.all().get(pk=deckSet)
+        count.multiplicity = multiplicity
+        count.save()
+    elif sbSet:
+        count = CardCount.objects.all().get(pk=sbSet)
+        count.multiplicity = sbMultiplicity
+        count.save()
     if query:
         results = SearchQuerySet().filter(content=query)
     else:
@@ -191,6 +238,7 @@ def published(request, deck_id):
         'user':request.user, 
         'description': deck.description, 
         'deck':deck,
+        'sb_counts':deck.sb_counts,
         'card_counts':deck.card_counts,
         'decks': decks,
         'comments': Comment.objects.filter(published_deck=deck)#user, timestamp, message 
