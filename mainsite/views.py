@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import make_password
 from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set, Card_Breakdown
 from bs4 import BeautifulSoup
 import requests
+import random
 from django.contrib.auth.models import User
 from haystack.query import SearchQuerySet
 from datetime import datetime
@@ -32,6 +33,21 @@ def about(request):
     return render_to_response('about.html', {'user': request.user})
 
 def simulate(request):
+    select = request.GET.get('select')
+    if select:
+        deck = Deck.objects.get(pk=select)
+        deckList = []
+        for card_count in deck.card_counts.all():
+            for i in xrange(card_count.multiplicity):
+                deckList.append(card_count.card)
+        try:
+            hand = random.sample(deckList, 7)
+        except ValueError:
+            hand = deckList
+        images = []
+        for card in hand:
+            images.append(card.get_image_url())
+        return render_to_response('simulate.html', {'user': request.user, 'decks':Deck.objects.filter(user=request.user), 'images':images})
     return render_to_response('simulate.html', {'user': request.user, 'decks':Deck.objects.filter(user=request.user)})
 
 def profile(request, username):
