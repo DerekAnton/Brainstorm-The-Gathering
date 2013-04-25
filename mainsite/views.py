@@ -196,11 +196,11 @@ def decks(request):
         count = userCollection.card_counts.get(pk=collectionSet)
         count.multiplicity = collectionMultiplicity
         count.save()
-    elif deckSet:
+    if deckSet:
         count = CardCount.objects.all().get(pk=deckSet)
         count.multiplicity = multiplicity
         count.save()
-    elif sbSet:
+    if sbSet:
         count = CardCount.objects.all().get(pk=sbSet)
         count.multiplicity = sbMultiplicity
         count.save()

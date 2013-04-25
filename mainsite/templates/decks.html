@@ -48,8 +48,8 @@
           {% if collection %}
           {% for card_count in collection.card_counts.all %}
           <form>
-            <button class="btn-mini" type="submit" name="collectionAdd" value="{{card_count.card.pk}}">+</button><button class="btn-mini" type="submit" name="decrimentCollection" value="{{card_count.pk}}">-</button><button class="btn-mini" type="submit" name="removeCardCollection" value="{{card_count.card.name}}">Remove</button>
-            <!--<input type="radio" name="removeCardCollection" value="{{card_count.card.pk}}">--><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="collectionMultiplicity"><button class="btn-mini" type="submit" name="collectionSet" value="{{card_count.pk}}">Set</button><br>
+            <button class="btn btn-mini" type="submit" name="collectionAdd" value="{{card_count.card.pk}}">+</button><button class="btn btn-mini" type="submit" name="decrimentCollection" value="{{card_count.pk}}">-</button><button class="btn btn-mini" type="submit" name="removeCardCollection" value="{{card_count.card.name}}">Remove</button>
+            <!--<input type="radio" name="removeCardCollection" value="{{card_count.card.pk}}">--><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="collectionMultiplicity"><button class="btn btn-mini" type="submit" name="collectionSet" value="{{card_count.pk}}">Set</button><br>
           </form>
           {% endfor %}
           {% endif %}
@@ -66,7 +66,7 @@
           {% if deck %}
           <input type="hidden" name="deck" value={{deck.pk}}>
           {% endif %}
-          <input id="searchText" type="text" placeholder="Search Cards" name="query">
+          <input id="searchText" type="text" placeholder="Search Card Name" name="query">
         </label>
         <button id="submitSearch" type="submit" class="btn">Search</button>
       </fieldset>
@@ -81,25 +81,29 @@
         {% endif %}
         {% for card in results %}
         {% if deck %}
-        <button id="addCard" class="btn-mini" type="submit" name="deckAdd" value="{{card.object.pk}}">+Deck</button>
-        <button id="addCard" class="btn-mini" type="submit" name="sbAdd" value="{{card.object.pk}}">+Sideboard</button>
-        {% endif %}<button class="btn-mini" type="submit" name="collectionAdd" value="{{card.object.pk}}">+Collection</button><a href="{{card.object.get_absolute_url}}">{{ card.object.name }}</a> <br>
+        <button id="addCard" class="btn btn-mini" type="submit" name="deckAdd" value="{{card.object.pk}}">+Deck</button>
+        <button id="addCard" class="btn btn-mini" type="submit" name="sbAdd" value="{{card.object.pk}}">+Sideboard</button>
+        {% endif %}<button class="btn btn-mini" type="submit" name="collectionAdd" value="{{card.object.pk}}">+Collection</button><a href="{{card.object.get_absolute_url}}">{{ card.object.name }}</a> <br>
         {% endfor %}
       </form>
     </div>
-    <form>
-      <input type="hidden" name="deck" value={{deck.pk}}>
       <div class="span4">
         {% if deck %}
         <div class="well sidebar-nav">
           <ul class="nav nav-list">  
             <li class="nav-header">{{ deck.name }}</li>
             {% for card_count in deck.card_counts.all %}
-            <button id="addCard" class="btn-mini" type="submit" name="deckAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn-mini" name="decriment" value="{{card_count.pk}}">-</button><button class="btn-mini" name="removeCard" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="multiplicity"><button class="btn-mini" type="submit" name="deckSet" value="{{card_count.pk}}">Set</button><br>
+            <form>
+            <input type="hidden" name="deck" value={{deck.pk}}>
+            <button id="addCard" class="btn btn-mini" type="submit" name="deckAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn btn-mini" name="decriment" value="{{card_count.pk}}">-</button><button class="btn btn-mini" name="removeCard" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="multiplicity"><button class="btn btn-mini" type="submit" name="deckSet" value="{{card_count.pk}}">Set</button><br>
+          </form>
             {% endfor %}
             <p><li class="nav-header">Sideboard</li></p>
             {% for card_count in deck.sb_counts.all %}
-            <button id="addCard" class="btn-mini" type="submit" name="sbAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn-mini" name="decrimentSb" value="{{card_count.pk}}">-</button><button class="btn-mini" name="removeCardSb" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="sbMultiplicity"><button class="btn-mini" type="submit" name="sbSet" value="{{card_count.pk}}">Set</button><br>
+            <form>
+            <input type="hidden" name="deck" value={{deck.pk}}>
+            <button id="addCard" class="btn btn-mini" type="submit" name="sbAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn btn-mini" name="decrimentSb" value="{{card_count.pk}}">-</button><button class="btn btn-mini" name="removeCardSb" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="sbMultiplicity"><button class="btn btn-mini" type="submit" name="sbSet" value="{{card_count.pk}}">Set</button><br>
+          </form>
             {% endfor %}
           </ul>
         </div><!--/.well -->
