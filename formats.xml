@@ -132,7 +132,7 @@
 				<name>Oath of Druids</name>
 			</card>
 			<card>
-				<name>Rebirthm</name>
+				<name>Rebirth</name>
 			</card>
 			<card>
 				<name>Shahrazad</name>
@@ -722,4 +722,5 @@
 				<name>singleton</name>
 			</card>
 		</restricted>
+	</commander>
 </formats>

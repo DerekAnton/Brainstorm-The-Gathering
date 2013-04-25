@@ -92,12 +92,42 @@
         <div class="well sidebar-nav">
           <ul class="nav nav-list">  
             <li class="nav-header">{{ deck.name }}</li>
-            {% for card_count in deck.card_counts.all %}
+            {% if creatures %}
+            <li class="nav-header">Creatures:</li>
+            {% for card_count in creatures %}
             <form>
             <input type="hidden" name="deck" value={{deck.pk}}>
             <button id="addCard" class="btn btn-mini" type="submit" name="deckAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn btn-mini" name="decriment" value="{{card_count.pk}}">-</button><button class="btn btn-mini" name="removeCard" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="multiplicity"><button class="btn btn-mini" type="submit" name="deckSet" value="{{card_count.pk}}">Set</button><br>
           </form>
             {% endfor %}
+            {% endif %}
+            {% if perm %}
+            <li class="nav-header">Other permanents:</li>
+            {% for card_count in perm %}
+            <form>
+            <input type="hidden" name="deck" value={{deck.pk}}>
+            <button id="addCard" class="btn btn-mini" type="submit" name="deckAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn btn-mini" name="decriment" value="{{card_count.pk}}">-</button><button class="btn btn-mini" name="removeCard" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="multiplicity"><button class="btn btn-mini" type="submit" name="deckSet" value="{{card_count.pk}}">Set</button><br>
+          </form>
+            {% endfor %}
+            {% endif %}
+            {% if spells %}
+            <li class="nav-header">Instants and Sorceries:</li>
+            {% for card_count in spells %}
+            <form>
+            <input type="hidden" name="deck" value={{deck.pk}}>
+            <button id="addCard" class="btn btn-mini" type="submit" name="deckAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn btn-mini" name="decriment" value="{{card_count.pk}}">-</button><button class="btn btn-mini" name="removeCard" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="multiplicity"><button class="btn btn-mini" type="submit" name="deckSet" value="{{card_count.pk}}">Set</button><br>
+          </form>
+            {% endfor %}
+            {% endif %}
+            {% if lands %}
+            <li class="nav-header">Lands:</li>
+            {% for card_count in lands %}
+            <form>
+            <input type="hidden" name="deck" value={{deck.pk}}>
+            <button id="addCard" class="btn btn-mini" type="submit" name="deckAdd" value="{{card_count.card.pk}}">+</button><button id="removeCard" class="btn btn-mini" name="decriment" value="{{card_count.pk}}">-</button><button class="btn btn-mini" name="removeCard" value="{{card_count.pk}}">Remove</button><a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x<input class="input-mini" type="number" value="{{card_count.multiplicity}}" name="multiplicity"><button class="btn btn-mini" type="submit" name="deckSet" value="{{card_count.pk}}">Set</button><br>
+          </form>
+            {% endfor %}
+            {% endif %}
             <p><li class="nav-header">Sideboard</li></p>
             {% for card_count in deck.sb_counts.all %}
             <form>
