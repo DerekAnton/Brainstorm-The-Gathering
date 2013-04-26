@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block title %}Packs{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <ul class="nav nav-list">  
+            <h3 class="nav-header">Crack a pack from:</h3>
+          <form>
+         <!-- {% for deck in decks %} -->
+
+	 <!-- {% for set in sets %} -->
+
+<!--          <li><button class="btn btn-small btn-block" name="select" value="{{deck.pk}}">{{ deck.name }}</button></li>
+ -->
+        <!--  {% endfor %} -->
+        </form>
+        </ul>
+      </div>
+    </div>
+    <div class="span8">
+      {% for card in images %}
+      <img src="{{card}}" width="180px" height="257px">
+      {% endfor %}
+    </div>
+</div>
+{% endblock %}
