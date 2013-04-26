@@ -179,6 +179,24 @@
   </form>
 </div><!--/span-->
 <div class="span8">
+  {% if standard %}
+  Legal in Standard<br>
+  {% endif %}
+  {% if modern %}
+  Legal in Modern<br>
+  {% endif %}
+  {% if legacy %}
+  Legal in Legacy<br>
+  {% endif %}
+  {% if vintage %}
+  Legal in Vintage<br>
+  {% endif %}
+  {% if commander %}
+  Legal in Commander<br>
+  {% endif %}
+  {% if not standard and not modern and not legacy and not vintage and not commander %}
+  Not legal in Standard, Modern, Legacy, Vintage or Commander<br>
+  {% endif %}
   <div id="color_div" style="width:400; height:300"></div>
   <div id="types_div" style="width:400; height:300"></div>
   <div id="curve_div" style="width:400; height:300"></div>

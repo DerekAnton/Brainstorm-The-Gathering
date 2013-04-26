@@ -5,8 +5,9 @@
 
 {% block content %}
 	<h1>Card Info - {{card.name}} ({{set}})</h1>
-	<p>{% for set in sets %} <a href="/info/{{set.name}}/{{card.name}}"> {{set.name}} </a> {% endfor %}<p>
-	<img src='{{card_image_url}}'>
+	<p>{% for current in sets %} <a href="/info/{{current.name}}/{{card.name}}"> {{current.name}} </a> {% endfor %}</p>
+	<p>{{set.long_name}}:<br>
+	<img src='{{card_image_url}}'></p>
 	<p>Color: {{card.color}}</p>
 	<p>Manacost: {{card.manacost}} (Converted Mana Cost = {{card.cmc}})</p>
 	{% if supertypes %}
@@ -35,6 +36,12 @@
 	{% if card.rules %}
 	<p>Oracle Text:<br>{{card.rules}}</p>
 	{% endif %}
+	<p>Legality:<br>
+	{{standard}} in Standard<br>
+	{{modern}} in Modern<br>
+	{{legacy}} in Legacy<br>
+	{{vintage}} in Vintage<br>
+	{{commander}} in Commander<br>
 	<a href="/favorite/{{card.name}}">Make favorite</a><br>
 	<a id="purchase_link" href="{{ price_url }}">Purchase Card</a>
 	<div id="average_price">Estimated Price Range: </div>

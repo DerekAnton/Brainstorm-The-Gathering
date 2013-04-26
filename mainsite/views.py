@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.hashers import make_password
-from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set, Card_Breakdown
+from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set, Card_Breakdown, Format
 from bs4 import BeautifulSoup
 import requests
 import random
@@ -285,7 +285,22 @@ def published(request, deck_id):
                 spells.append(card_count)
             else:
                 perm.append(card_count)
+    standard = Format.objects.filter(name='standard')[0]
+    modern = Format.objects.filter(name='modern')[0]
+    legacy = Format.objects.filter(name='legacy')[0]
+    vintage = Format.objects.filter(name='vintage')[0]
+    commander = Format.objects.filter(name='commander')[0]
+    inStandard = standard.legal(deck)
+    inModern = modern.legal(deck)
+    inLegacy = legacy.legal(deck)
+    inVintage = vintage.legal(deck)
+    inCommander = commander.legal(deck)
     context = {
+        'standard':inStandard,
+        'modern':inModern,
+        'legacy':inLegacy,
+        'vintage':inVintage,
+        'commander':inCommander,
         #'curvelength':curvelength,
         #'manacurve':manacurve,
         'creatures':creatures,
@@ -371,6 +386,19 @@ def register(request):
 def card_info(request, card_name, set_name):
     card = Card.objects.get(name__iexact=card_name)
     _set = Set.objects.get(name=set_name)
+    standard = Format.objects.filter(name='standard')[0]
+    modern = Format.objects.filter(name='modern')[0]
+    legacy = Format.objects.filter(name='legacy')[0]
+    vintage = Format.objects.filter(name='vintage')[0]
+    commander = Format.objects.filter(name='commander')[0]
+    #formats = [standard, modern, legacy, vintage, commander]
+    inStandard = standard.checkCard(card)
+    inModern = modern.checkCard(card)
+    inLegacy = legacy.checkCard(card)
+    inVintage = vintage.checkCard(card)
+    inCommander = commander.checkCard(card)
+    #for format in formats:
+    #    format = format.checkCard(card)
     params = {'cards': card_name}
     params2 = {'cn': card_name}
     types = card.typing.all()
@@ -378,7 +406,7 @@ def card_info(request, card_name, set_name):
     subtypes = card.sub_typing.all()
     price_url = 'http://magic.tcgplayer.com/db/magic_single_card.asp?' + urllib.urlencode(params2)
     price_query = urllib.urlencode(params)
-    return render_to_response('card_info.html', {'supertypes': supertypes, 'subtypes': subtypes, 'card': card, 'types':types, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all(), 'price_query': price_query, 'price_url': price_url, 'isCreature': len(card.typing.filter(name='Creature')) == 1})
+    return render_to_response('card_info.html', {'standard':inStandard, 'modern':inModern, 'legacy':inLegacy, 'vintage':inVintage, 'commander':inCommander, 'supertypes': supertypes, 'subtypes': subtypes, 'card': card, 'types':types, 'set': _set,'user':request.user, 'card_image_url':card.get_image_url(_set),'sets':card.sets.all(), 'price_query': price_query, 'price_url': price_url, 'isCreature': len(card.typing.filter(name='Creature')) == 1})
 
 def top_decks(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")

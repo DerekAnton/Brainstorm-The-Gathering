@@ -27,7 +27,7 @@ for _format in formats:
             newFormat.legal_sets.add(Set.objects.get(name=_set.name))
     else:
         for _set in _format.find('sets').findall('set'):
-            newFormat.legal_sets.add(Set.objects.get(name=_set.find('name').text))
+            newFormat.legal_sets.add(Set.objects.get(long_name=_set.find('name').text))
     newFormat.save()
     for _card in _format.find('banned').findall('card'):
     	print _card.find('name').text

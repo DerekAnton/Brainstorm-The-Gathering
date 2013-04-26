@@ -54,6 +54,48 @@ class Format(models.Model):
     banned_cards = models.ManyToManyField('mainsite.Card',related_name='banned_cards')
     restricted_cards = models.ManyToManyField('mainsite.Card',related_name='restricted_cards')
 
+    def checkCard(self, card):
+        for _set in self.legal_sets.all():
+            if card.sets.filter(pk=_set.pk):
+                if self.banned_cards.filter(pk=card.pk):
+                    return 'Banned'
+                if self.restricted_cards.filter(pk=card.pk):
+                    return 'Restricted'
+                return 'Legal'
+        return 'Banned'
+
+    def legal(self, deck):
+        numCards = 0
+        for card_count in deck.card_counts.all():
+            numCards += card_count.multiplicity
+            if self.checkCard(card_count.card) == 'Banned':
+                return False
+            if self.checkCard(card_count.card) == 'Restricted' and card_count.multiplicity > 1 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
+                return False
+            if card_count.multiplicity > 4 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
+                return False
+        if numCards < 60:
+            return False
+        if self.name == 'commander' and numCards != 100:
+            return False
+        numCards = 0
+        for card_count in deck.sb_counts.all():
+            numCards += card_count.multiplicity
+            if self.checkCard(card_count.card) == 'Banned':
+                return False
+            if self.checkCard(card_count.card) == 'Restricted' and card_count.multiplicity > 1 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
+                return False
+            if card_count.multiplicity > 4 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
+                return False
+            if deck.card_counts.filter(card=card_count.card):
+                if deck.card_counts.get(card=card_count.card).multiplicity + card_count.multiplicity > 4 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
+                    return False
+                if self.checkCard(card_count.card) == 'Restricted' and deck.card_counts.get(card=card_count.card).multiplicity + card_count.multiplicity > 1 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
+                    return False
+        if numCards == 0 or numCards == 15:
+            return True
+        return False
+
 class Set(models.Model):
     name = models.CharField(max_length=200)
     long_name = models.CharField(max_length=200)
@@ -322,7 +364,7 @@ class Card_Breakdown(models.Model):
                 self.colorless_mana += int(re.sub('[^0123456789]','',normal))*x.multiplicity
             #find a way to help out Ai algorithm
             
-            if '/' in x.card.manacost:
+            if x.card.manacost and '/' in x.card.manacost:
                 if 'R' in normal:
                     tempRed += x.multiplicity
                 if 'U' in normal:
