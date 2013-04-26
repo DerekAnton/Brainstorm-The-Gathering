@@ -383,3 +383,91 @@ class Card_Breakdown(models.Model):
         self.mana_curve=str(curve).strip('[]')
         print self.mana_curve
         self.deck=deck;
+
+'''class Recommendation(models.Model):
+    colors = models.CharField()
+    curve = models.CommaSeparatedIntegerField(max_length=1000, default='0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0')
+    cardsPk = models.CommaSeparatedIntegerField(max_length=500, default='0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0')
+    basicLands = models.CommaSeparatedIntegerField(max_length=500, default='0, 0, 0, 0, 0')
+    numDecks = models.IntegerField(default=0)
+    count0 = models.ManyToManyField('mainsite.CardCount')
+    count1 = models.ManyToManyField('mainsite.CardCount')
+    count2 = models.ManyToManyField('mainsite.CardCount')
+    count3 = models.ManyToManyField('mainsite.CardCount')
+    count4 = models.ManyToManyField('mainsite.CardCount')
+    count5 = models.ManyToManyField('mainsite.CardCount')
+    count6 = models.ManyToManyField('mainsite.CardCount')
+    count7 = models.ManyToManyField('mainsite.CardCount')
+    count8 = models.ManyToManyField('mainsite.CardCount')
+    count9 = models.ManyToManyField('mainsite.CardCount')
+    count10 = models.ManyToManyField('mainsite.CardCount')
+    count11 = models.ManyToManyField('mainsite.CardCount')
+    count12 = models.ManyToManyField('mainsite.CardCount')
+    count13 = models.ManyToManyField('mainsite.CardCount')
+    count14 = models.ManyToManyField('mainsite.CardCount')
+    count15 = models.ManyToManyField('mainsite.CardCount')
+    count16 = models.ManyToManyField('mainsite.CardCount')
+    count17 = models.ManyToManyField('mainsite.CardCount')
+    count18 = models.ManyToManyField('mainsite.CardCount')
+
+    def update(self, deck):
+        breakdown = Card_Breakdown()
+        breakdown.save()
+        breakdown.initialize(deck)
+        breakdown.save()
+        self.numDecks += 1
+        newCurve = list(breakdown.curve)
+        curve = list(self.curve)
+        for i in xrange(len(newCurve)):
+            curve[i] += newCurve[i]
+        self.curve = str(curve).strip('[]')
+        for card_count in deck:
+            if 
+            cost = card_count.card.cmc
+            count = None
+            if cmc == 0:
+                count = self.count0
+            if cmc == 1:
+                count = self.count1
+            if cmc == 2:
+                count = self.count2
+            if cmc == 3:
+                count = self.count3
+            if cmc == 4:
+                count = self.count4
+            if cmc == 5:
+                count = self.count5
+            if cmc == 6:
+                count = self.count6
+            if cmc == 7:
+                count = self.count7
+            if cmc == 8:
+                count = self.count8
+            if cmc == 9:
+                count = self.count9
+            if cmc == 10:
+                count = self.count10
+            if cmc == 11:
+                count = self.count11
+            if cmc == 12:
+                count = self.count12
+            if cmc == 13:
+                count = self.count13
+            if cmc == 14:
+                count = self.count14
+            if cmc == 15:
+                count = self.count15
+            if cmc == 16:
+                count = self.count16
+            if cmc == 17:
+                count = self.count17
+            if cmc == 18:
+                count = self.count18
+            exists = False
+            for _count in count:
+                if _count.card.pk == card_count.card.pk:
+                    exists = True
+                    _count.multiplicity += card_count.multiplicity
+                if not exists:
+            if not exitst:
+                count.add(CardCount(card=card_count))'''
