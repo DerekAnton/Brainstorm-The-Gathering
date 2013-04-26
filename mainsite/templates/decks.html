@@ -17,19 +17,20 @@
     <div class="span4">
       <div class="well sidebar-nav">
         <ul class="nav nav-list">  
-          <li class="active"><a href="#">My Decks</a></li>
+          <li class="nav-header">My Decks</li>
           <form>
-            <table>
-              {% for deck in decks %}
+              {% for current in decks %}
               {% for key, value in deckSizes.items %}
-              {% ifequal deck.pk key %}
-              <tr>
-                <td><button class="btn" type="submit" name="deck_delete" value="{{ deck.pk }}">Delete</button></td><td><a href="/decks/?deck={{ deck.pk }}">{{ deck.name }}</a> ({{ value }} cards)</td>
-              </tr>
+              {% ifequal current.pk key %}
+                {% if deck and current == deck %}
+                <li class="active">
+                {% else %}
+                <li>
+                  {% endif %}
+                <button class="btn" type="submit" name="deck_delete" value="{{ current.pk }}">Delete</button></td><td><a href="/decks/?deck={{ current.pk }}">{{ current.name }}</a> ({{ value }} cards)</li>
               {% endifequal %}
               {% endfor %}
               {% endfor %}
-            </table>
           </form>
         </ul>
       </div><!--/span-->
