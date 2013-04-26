@@ -268,9 +268,30 @@ def published(request, deck_id):
     #manacurve = list(xrange(len(curve)))
     #for i in xrange(len(curve)):
     #    manacurve[i] = str([i,str(i),int(curve[i])])
+    creatures = []
+    lands = []
+    spells = []
+    perm = []
+    if deck:
+        for card_count in deck.card_counts.all():
+            card = card_count.card
+            if card.typing.filter(name='Creature'):
+                creatures.append(card_count)
+            elif card.typing.filter(name='Land'):
+                lands.append(card_count)
+            elif card.typing.filter(name='Sorcery'):
+                spells.append(card_count)
+            elif card.typing.filter(name='Instant'):
+                spells.append(card_count)
+            else:
+                perm.append(card_count)
     context = {
         #'curvelength':curvelength,
         #'manacurve':manacurve,
+        'creatures':creatures,
+        'lands':lands,
+        'spells':spells,
+        'perm':perm,
         'breakdown':Card_Breakdown.objects.filter(deck=deck)[0],
         'user':request.user, 
         'description': deck.description, 

@@ -135,9 +135,30 @@
   <div class="well sidebar-nav">
     <ul class="nav nav-list">  
       <li class="nav-header">{{deck.name}} by <a href="/profile/{{deck.user.username}}">{{deck.user.username}}</a></li>
-      {% for card_count in card_counts.all %}
+      {% if creatures %}
+      <li class="nav-header">Creatures:</li>
+      {% for card_count in creatures %}
       <a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}<br>
       {% endfor %}
+      {% endif %}
+      {% if perm %}
+      <li class="nav-header">Other Permanents:</li>
+      {% for card_count in perm %}
+      <a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}<br>
+      {% endfor %}
+      {% endif %}
+      {% if spells %}
+      <li class="nav-header">Spells:</li>
+      {% for card_count in spells %}
+      <a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}<br>
+      {% endfor %}
+      {% endif %}
+      {% if lands %}
+      <li class="nav-header">Lands:</li>
+      {% for card_count in lands %}
+      <a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}<br>
+      {% endfor %}
+      {% endif %}
       <p><li class="nav-header">Sideboard</li></p>
       {% for card_count in sb_counts.all %}
       <a href="{{card_count.card.get_absolute_url}}">{{ card_count.card.name }}</a> x {{ card_count.multiplicity }}<br>
