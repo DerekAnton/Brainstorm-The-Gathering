@@ -284,6 +284,12 @@ class Card_Breakdown(models.Model):
         self.white = 0
         self.colorless = 0
 
+        tempWhite = 0
+        tempBlue = 0
+        tempBlack = 0
+        tempRed = 0
+        tempGreen = 0
+
         self.creature_count = 0
         self.land_count = 0
         self.sorcery_count = 0
@@ -316,19 +322,30 @@ class Card_Breakdown(models.Model):
                 self.colorless_mana += int(re.sub('[^0123456789]','',normal))*x.multiplicity
             #find a way to help out Ai algorithm
             
-
-            if 'R' in normal:
-                self.red += x.multiplicity
-            if 'U' in normal:
-                self.blue += x.multiplicity
-            if 'G' in normal:
-                self.green += x.multiplicity
-            if 'B' in normal:
-                self.black += x.multiplicity
-            if 'W' in normal:
-                self.white += x.multiplicity
-            if not ('W' in normal or 'U' in normal or 'B' in normal or 'R' in normal or 'G' in normal):
-                self.colorless += x.multiplicity
+            if '/' in x.card.manacost:
+                if 'R' in normal:
+                    tempRed += x.multiplicity
+                if 'U' in normal:
+                    tempBlue += x.multiplicity
+                if 'G' in normal:
+                    tempGreen += x.multiplicity
+                if 'B' in normal:
+                    tempBlack += x.multiplicity
+                if 'W' in normal:
+                    tempWhite += x.multiplicity
+            else:
+                if 'R' in normal:
+                    self.red += x.multiplicity
+                if 'U' in normal:
+                    self.blue += x.multiplicity
+                if 'G' in normal:
+                    self.green += x.multiplicity
+                if 'B' in normal:
+                    self.black += x.multiplicity
+                if 'W' in normal:
+                    self.white += x.multiplicity
+                if not ('W' in normal or 'U' in normal or 'B' in normal or 'R' in normal or 'G' in normal):
+                    self.colorless += x.multiplicity
             #determines the manacurve of card
 
             #determines the numbers of types
@@ -350,6 +367,16 @@ class Card_Breakdown(models.Model):
 
             self.number_of_cards += x.multiplicity
 
+        if self.white:
+            self.white += tempWhite
+        if self.blue:
+            self.blue += tempBlue
+        if self.black:
+            self.black += tempBlack
+        if self.red:
+            self.red += tempRed
+        if self.green:
+            self.green += tempGreen
         self.colorless -= self.land_count
         curve[0] -= self.land_count
         #get number of cards
