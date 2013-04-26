@@ -100,7 +100,7 @@ def decks(request):
     if new:
         new = Deck(name=new,user=request.user,created=datetime.now(),description='')
         new.save()
-        deck = None
+        deck = new
     elif selected:
         deck = Deck.objects.all().get(pk=selected)
         if deckAdd or collectionAdd or sbAdd:
