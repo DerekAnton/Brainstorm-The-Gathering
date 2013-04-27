@@ -5,9 +5,13 @@
 
 {% block content %}
 	<h1>Card Info - {{card.name}} ({{set}})</h1>
+	<div class="row">
+		<div class="span3">
 	<p>{% for current in sets %} <a href="/info/{{current.name}}/{{card.name}}"> {{current.name}} </a> {% endfor %}</p>
 	<p>{{set.long_name}}:<br>
 	<img src='{{card_image_url}}'></p>
+</div>
+<div class="span9">
 	<p>Color: {{card.color}}</p>
 	<p>Manacost: {{card.manacost}} (Converted Mana Cost = {{card.cmc}})</p>
 	{% if supertypes %}
@@ -54,5 +58,7 @@
 			console.log(data.cards[0].average);
 		});
 	</script>
+</div>
+</div>
 
 {% endblock %}

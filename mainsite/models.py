@@ -32,6 +32,9 @@ class Card(models.Model):
     super_typing = models.ManyToManyField('mainsite.SuperTyping')
     cmc = models.IntegerField()
 
+    class Meta:
+        ordering = ['name']
+
     def __unicode__(self):
         return self.name
 
@@ -53,6 +56,9 @@ class Format(models.Model):
     legal_sets = models.ManyToManyField('mainsite.Set')
     banned_cards = models.ManyToManyField('mainsite.Card',related_name='banned_cards')
     restricted_cards = models.ManyToManyField('mainsite.Card',related_name='restricted_cards')
+
+    def __unicode__(self):
+        return self.name
 
     def checkCard(self, card):
         for _set in self.legal_sets.all():
@@ -142,6 +148,9 @@ class Deck(models.Model):
     card_counts = models.ManyToManyField('mainsite.CardCount',related_name='md')
     sb_counts = models.ManyToManyField('mainsite.CardCount',related_name='sb')
 
+    def __unicode__(self):
+        return self.name
+
     def publish(self):
         publishedDeck = PublishedDeck(legacy_legal=self.format_check(Format.objects.get(name=legacy)),vintage_legal=self.format_check(Format.objects.get(name=vintage)),modern_legal=self.format_check(Format.objects.get(name=modern)),standard_legal=self.format_check(Format.objects.get(name=standard)),commander_legal=self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all())
         publishedDeck.save()
@@ -210,6 +219,9 @@ class PublishedDeck(models.Model):
     standard_legal = models.BooleanField()
     commander_legal = models.BooleanField()
     comments = models.ManyToManyField('mainsite.Comment')
+
+    def __unicode__(self):
+        return self.name
 
     def pull_deck(self, newUser):
         ownedDeck = Deck(user=newUser,created=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all())
