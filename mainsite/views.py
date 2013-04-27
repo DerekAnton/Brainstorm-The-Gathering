@@ -170,9 +170,20 @@ def decks(request):
                 new_count.save()
                 new.sb_counts.add(new_count)
             new.save()
+            standard = Format.objects.filter(name='standard')[0]
+            modern = Format.objects.filter(name='modern')[0]
+            legacy = Format.objects.filter(name='legacy')[0]
+            vintage = Format.objects.filter(name='vintage')[0]
+            commander = Format.objects.filter(name='commander')[0]
             breakdown = Card_Breakdown(deck=new, number_of_cards=0)
             breakdown.initialize(new)
             breakdown.save()
+            new.standard_legal = standard.legal(deck)
+            new.modern_legal = modern.legal(deck)
+            new.legacy_legal = legacy.legal(deck)
+            new.vintage_legal = vintage.legal(deck)
+            new.commander_legal = commander.legal(deck)
+            new.save()
     elif collectionAdd:
         card = Card.objects.all().get(pk=collectionAdd)
         if not userCollection.card_counts.filter(card=card):
@@ -285,22 +296,12 @@ def published(request, deck_id):
                 spells.append(card_count)
             else:
                 perm.append(card_count)
-    standard = Format.objects.filter(name='standard')[0]
-    modern = Format.objects.filter(name='modern')[0]
-    legacy = Format.objects.filter(name='legacy')[0]
-    vintage = Format.objects.filter(name='vintage')[0]
-    commander = Format.objects.filter(name='commander')[0]
-    inStandard = standard.legal(deck)
-    inModern = modern.legal(deck)
-    inLegacy = legacy.legal(deck)
-    inVintage = vintage.legal(deck)
-    inCommander = commander.legal(deck)
     context = {
-        'standard':inStandard,
-        'modern':inModern,
-        'legacy':inLegacy,
-        'vintage':inVintage,
-        'commander':inCommander,
+        'standard':deck.standard_legal,
+        'modern':deck.modern_legal,
+        'legacy':deck.legacy_legal,
+        'vintage':deck.vintage_legal,
+        'commander':deck.commander_legal,
         #'curvelength':curvelength,
         #'manacurve':manacurve,
         'creatures':creatures,
