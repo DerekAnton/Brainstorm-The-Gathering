@@ -216,7 +216,7 @@ def decks(request):
         count.multiplicity = sbMultiplicity
         count.save()
     if query:
-        results = SearchQuerySet().filter(content=query)
+        results = SearchQuerySet().models(Card).filter(content=query)
     else:
         results = ''
     if delete_deck and Deck.objects.all().filter(pk=delete_deck):
