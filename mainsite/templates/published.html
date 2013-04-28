@@ -165,18 +165,18 @@
       {% endfor %}
     </ul>
   </div><!--/.well -->
-  <ul id="comment_list">
-    {% for comment in comments.all %}
-    <li><b>{{comment.user}}</b> ({{ comment.timestamp }}): {{ comment.message }}</li>
-    {% endfor %}
-  </ul>
-
   <form>
     <textarea name="new_comment" rows="3" cols="20" value="" maxlength="100"></textarea>
     <input type="hidden" name="deck" value={{deck.pk}}>
     <input type="hidden" name="user" value={{user.username}}>
     <button class="btn" type="submit">Add Comment!</button>
   </form>
+  <ul id="comment_list">
+    {% for comment in comments.all %}
+    <li><b>{{comment.user}}</b> ({{ comment.timestamp }}): {{ comment.message }}</li>
+    {% endfor %}
+  </ul>
+
 </div><!--/span-->
 <div class="span8">
   {% if standard %}
