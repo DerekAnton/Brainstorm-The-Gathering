@@ -333,7 +333,7 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect('/')
         else:
-            pass
+            return HttpResponseRedirect('/')
             # Return an 'invalid login' error message.
 
 def logout_view(request):
