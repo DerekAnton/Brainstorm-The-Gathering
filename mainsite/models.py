@@ -3,6 +3,8 @@ import re
 from datetime import datetime, tzinfo, timedelta
 import unicodedata
 from django.contrib.auth.models import User
+from django.db import models
+from haystack import signals
 
 class EST(tzinfo):
 
@@ -525,3 +527,16 @@ class Card_Breakdown(models.Model):
                 if not exists:
             if not exitst:
                 count.add(CardCount(card=card_count))'''
+
+class DynamicIndexSignalProcessor(signals.BaseSignalProcessor):
+    def setup(self):
+        models.signals.post_save.connect(self.handle_save, sender=PublishedDeck)
+        models.signals.post_delete.connect(self.handle_delete, sender=PublishedDeck)
+        models.signals.post_save.connect(self.handle_save, sender=User)
+        models.signals.post_delete.connect(self.handle_delete, sender=User)
+
+    def teardown(self):
+        models.signals.post_save.disconnect(self.handle_save, sender=PublishedDeck)
+        models.signals.post_delete.disconnect(self.handle_delete, sender=PublishedDeck)
+        models.signals.post_save.disconnect(self.handle_save, sender=User)
+        models.signals.post_delete.disconnect(self.handle_delete, sender=User)

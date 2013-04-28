@@ -18,11 +18,37 @@
 
         {% if query %}
             <h3>Results</h3>
+            <h4>Published Decks</h4>
 
             {% for result in page.object_list %}
+              {% if result.content_type == "mainsite.publisheddeck" %}
                 <p>
                     <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
                 </p>
+              {% endif %}
+            {% empty %}
+                <p>No results found.</p>
+            {% endfor %}
+            <h4>Users</h4>
+
+            {% for result in page.object_list %}
+              {% if result.content_type == "auth.user" %}
+                <p>
+                <a href="/profile/{{result.object.username}}">{{ result.object.username }}</a>
+                </p>
+              {% endif %}
+            {% empty %}
+                <p>No results found.</p>
+            {% endfor %}
+
+            <h4>Card</h4>
+
+            {% for result in page.object_list %}
+              {% if result.content_type == "mainsite.card" %}
+                <p>
+                <a href="{{result.object.get_absolute_url}}">{{ result.object.name }}</a>
+                </p>
+              {% endif %}
             {% empty %}
                 <p>No results found.</p>
             {% endfor %}
