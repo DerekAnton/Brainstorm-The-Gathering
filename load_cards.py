@@ -4,7 +4,9 @@ import string
 from django.core.management import setup_environ
 import os
 import brainstormtg.settings
+from django.conf import settings
 setup_environ(brainstormtg.settings)
+settings.HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.BaseSignalProcessor'
 from mainsite.models import Card, Set, Typing, SubTyping, SuperTyping, Format
 
 import xml.etree.ElementTree as ET
