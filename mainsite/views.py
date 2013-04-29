@@ -302,6 +302,8 @@ def published(request, deck_id):
     deck = PublishedDeck.objects.all().get(pk=deck_id)
     new_comment = request.GET.get('new_comment')
     username=request.GET.get('user')
+    grab = request.GET.get('grabDeck')
+    grabID = request.GET.get('deck')
     try:
         user=User.objects.all().get(username=username)
     except:
@@ -310,14 +312,24 @@ def published(request, deck_id):
         new_comment = Comment(user=user, published_deck=deck, timestamp=datetime.now(), message=new_comment)
         new_comment.save()
         new_comment = None
+    if grab and grabID:
+        grab = PublishedDeck.objects.all().get(pk=grabID)
+        new = Deck(name=grab.name,user=request.user,created=datetime.now(),description='')
+        new.save()
+        for count in grab.card_counts.all():
+            new_count = CardCount(card=count.card, multiplicity=count.multiplicity)
+            new_count.save()
+            new.card_counts.add(new_count)
+        for count in grab.sb_counts.all():
+            new_count = CardCount(card=count.card, multiplicity=count.multiplicity)
+            new_count.save()
+            new.sb_counts.add(new_count)
+
+
+
+
     curve = Card_Breakdown.objects.filter(deck=deck)[0].mana_curve
-    #for i in xrange(20):
-    #    curve = curve.rstrip('0, ')
     curve = curve.split(', ')
-    #curvelength = len(curve)
-    #manacurve = list(xrange(len(curve)))
-    #for i in xrange(len(curve)):
-    #    manacurve[i] = str([i,str(i),int(curve[i])])
     creatures = []
     lands = []
     spells = []
@@ -372,7 +384,7 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect('/')
         else:
-            pass
+            return HttpResponseRedirect('/')
             # Return an 'invalid login' error message.
 
 def logout_view(request):

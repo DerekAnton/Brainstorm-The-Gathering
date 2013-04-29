@@ -165,6 +165,13 @@
       {% endfor %}
     </ul>
   </div><!--/.well -->
+
+  <form>
+    <input type="hidden" name="deck" value={{deck.pk}}>
+    <input type="hidden" name="grabDeck" value="1">
+    <button class="btn" type="submit">Grab Deck</button>
+  </form>
+
   <form>
     <textarea name="new_comment" rows="3" cols="20" value="" maxlength="100"></textarea>
     <input type="hidden" name="deck" value={{deck.pk}}>
