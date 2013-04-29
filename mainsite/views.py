@@ -15,6 +15,7 @@ from haystack.query import SearchQuerySet
 from datetime import datetime
 import urllib
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from haystack.query import SQ
 
 def index(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")
@@ -78,15 +79,15 @@ def advanced(request):
     except ValueError:
         page = 1
 
-    sqs = SearchQuerySet().models(Card).filter(content=name).order_by('text')
+    sqs = SearchQuerySet().models(Card).filter(content=name)
     if sets:
         sqs = sqs.filter(sets=sets)
     if color:
-        sqs = sqs.filter_and(color=color)
+        sqs = [s for s in sqs if s.object.color == color]
     if power:
-        sqs = sqs.filter(power=power)
+        sqs = [s for s in sqs if s.object.power == power]
     if toughness:
-        sqs = sqs.filter(toughness=toughness)
+        sqs = [s for s in sqs if s.object.toughness == toughness]
     if types:
         sqs = sqs.filter(types=types)
     if sub:
