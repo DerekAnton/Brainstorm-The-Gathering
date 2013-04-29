@@ -128,6 +128,7 @@ def decks(request):
     collectionAdd = request.GET.get('collectionAdd')
     delete_deck = request.GET.get('deck_delete')
     query = request.GET.get('query')
+    rename = request.GET.get('rename')
     deck = None
 
 
@@ -143,6 +144,9 @@ def decks(request):
         deck = new
     elif selected:
         deck = Deck.objects.all().get(pk=selected)
+        if rename:
+            deck.name = rename
+            deck.save()
         if deckAdd or collectionAdd or sbAdd:
             if deckAdd:
                 card = Card.objects.all().get(pk=deckAdd)

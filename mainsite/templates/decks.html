@@ -64,6 +64,11 @@
     <div class="span4">
       {% if deck %}
       <p>Editing {{deck.name}}</p>
+      <form>
+        <input type="hidden" name="deck" value={{deck.pk}}>
+        <input type="text" placeholder="Rename This Deck" name="rename">
+        <button id="submitSearch" type="submit" class="btn">Rename</button>
+      </form>
       {% endif %}
       <form>
         <fieldset>
