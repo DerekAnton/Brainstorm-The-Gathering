@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from haystack.query import SearchQuerySet
 from datetime import datetime
 import urllib
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 def index(request):
     r = requests.get("http://www.starcitygames.com/pages/decklists/")
@@ -61,6 +62,44 @@ def profile(request, username):
     published = PublishedDeck.objects.filter(user=user)[:10]
     context = {'username': username, 'decks':decks, 'published':published, 'user':user,'favorite':favorite_img}
     return render_to_response('profile.html', context)
+
+def advanced(request):
+    name = request.GET.get('name')
+    sets = request.GET.get('set')
+    color = request.GET.get('color')
+    power = request.GET.get('power')
+    toughness = request.GET.get('toughness')
+    types = request.GET.get('type')
+    sub = request.GET.get('sub')
+    supers = request.GET.get('super')
+
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    sqs = SearchQuerySet().models(Card).filter(content=name).order_by('text')
+    if sets:
+        sqs = sqs.filter(sets=sets)
+    if color:
+        sqs = sqs.filter_and(color=color)
+    if power:
+        sqs = sqs.filter(power=power)
+    if toughness:
+        sqs = sqs.filter(toughness=toughness)
+    if types:
+        sqs = sqs.filter(types=types)
+    if sub:
+        sqs = sqs.filter(subs=sub)
+    if supers:
+        sqs = sqs.filter(supers=supers)
+    paginator = Paginator(sqs, 20)
+    try:
+        results = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        results = paginator.page(paginator.num_pages)
+    context = {'results':results}
+    return render_to_response('advanced.html', context)
 
 def decks(request):
     multiplicity = request.GET.get('multiplicity')

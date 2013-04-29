@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Card Search{% endblock %}
+
+{% block content %}
+    <h2>Search</h2>
+
+    <form method="get" action=".">
+        <table>
+            <tr> Name: <input type="text" name="name"> </tr><br>
+            <tr> Set: <input type="text" name="set"> </tr><br>
+            <tr> Color: <input type="text" name="color"> </tr><br>
+            <tr> Power: <input type="text" name="power"> </tr><br>
+            <tr> Toughness: <input type="text" name="toughness"> </tr><br>
+            <tr> Type: <input type="text" name="type"> </tr><br>
+            <tr> Sub Type: <input type="text" name="sub"> </tr><br>
+            <tr> Super Type: <input type="text" name="super"> </tr><br>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <input type="submit" value="Search">
+                </td>
+            </tr>
+        </table>
+
+        {% if results %}
+            <h3>Results</h3>
+
+            {% for result in results %}
+                <p>
+                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
+                </p>
+            {% empty %}
+                <p>No results found.</p>
+            {% endfor %}
+            {% if results.has_previous %}
+                <a href="?page={{ results.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ results.number }} of {{ results.paginator.num_pages }}.
+            </span>
+
+            {% if results.has_next %}
+                <a href="?page={{ results.next_page_number }}">next</a>
+            {% endif %}
+        {% endif %}
+    </form>
+{% endblock %}

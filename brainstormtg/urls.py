@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
+from mainsite.models import Card
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -16,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^register/', 'mainsite.views.register'),
     url(r'^info/(?P<set_name>\w+)/(?P<card_name>[\w\-\',\s]+)/$', 'mainsite.views.card_info'),
     url(r'^search/', include('haystack.urls')),
+    url('^advanced/', 'mainsite.views.advanced'),
     url(r'^top_decks/', 'mainsite.views.top_decks'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
