@@ -6,7 +6,7 @@ import brainstormtg.settings
 from django.conf import settings
 setup_environ(brainstormtg.settings)
 settings.HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.BaseSignalProcessor'
-from mainsite.models import Card, PublishedDeck, CardCount, Card_Breakdown
+from mainsite.models import Card, PublishedDeck, CardCount, Card_Breakdown, Format
 from django.contrib.auth.models import User
 
 import requests
@@ -54,3 +54,14 @@ for format in ['standard', 'legacy', 'modern', 'vintage']:
         breakdown = Card_Breakdown()
         breakdown.initialize(deck)
         breakdown.save()
+        standard = Format.objects.filter(name='standard')[0]
+        modern = Format.objects.filter(name='modern')[0]
+        legacy = Format.objects.filter(name='legacy')[0]
+        vintage = Format.objects.filter(name='vintage')[0]
+        commander = Format.objects.filter(name='commander')[0]
+        deck.standard_legal = standard.legal(deck)
+        deck.modern_legal = modern.legal(deck)
+        deck.legacy_legal = legacy.legal(deck)
+        deck.vintage_legal = vintage.legal(deck)
+        deck.commander_legal = commander.legal(deck)
+        deck.save()

@@ -323,7 +323,6 @@ class Card_Breakdown(models.Model):
     
     
     def initialize(self, deck):
-        print self.mana_curve
         super(Card_Breakdown,self).__init__()
         self.number_of_cards=0
         self.red_mana = 0
@@ -437,7 +436,6 @@ class Card_Breakdown(models.Model):
         curve[0] -= self.land_count
         #get number of cards
         self.mana_curve=str(curve).strip('[]')
-        print self.mana_curve
         self.deck=deck
 
 class Archetype(models.Model):
@@ -448,6 +446,9 @@ class Archetype(models.Model):
     basicLands = models.CommaSeparatedIntegerField(max_length=500, default='0, 0, 0, 0, 0')
     numDecks = models.IntegerField(default=0)
     cards = models.ManyToManyField('mainsite.Card')
+
+    def __unicode__(self):
+        return self.format + ': ' + self.colors
 
     def update(self, deck):
         breakdown = Card_Breakdown()
@@ -466,6 +467,7 @@ class Archetype(models.Model):
         for card_count in deck:
             if not self.cards.filter(pk=card_count.card.pk):
                 self.cards.add(card_count.card)
+        self.save()
 
     def recommend(self, deck):
         breakdown = Card_Breakdown()
