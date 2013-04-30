@@ -3,7 +3,7 @@ from django.core.management import setup_environ
 import os
 import brainstormtg.settings
 setup_environ(brainstormtg.settings)
-
+settings.HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.BaseSignalProcessor'
 from mainsite.models import Card, PublishedDeck, CardCount, Card_Breakdown
 from django.contrib.auth.models import User
 
