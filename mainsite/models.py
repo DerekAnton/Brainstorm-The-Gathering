@@ -441,8 +441,8 @@ class Card_Breakdown(models.Model):
         self.deck=deck
 
 class Archetype(models.Model):
-    colors = models.CharField(max_length=200, default='')
-    format = models.CharField(max_length=200, default='')
+    colors = models.CharField(max_length=200)
+    format = models.CharField(max_length=200)
     lands = models.IntegerField(default=0)
     curve = models.CommaSeparatedIntegerField(max_length=1000, default='0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0')
     basicLands = models.CommaSeparatedIntegerField(max_length=500, default='0, 0, 0, 0, 0')
