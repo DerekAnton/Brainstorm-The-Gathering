@@ -154,7 +154,7 @@ class Deck(models.Model):
         return self.name
 
     def publish(self):
-        publishedDeck = PublishedDeck(legacy_legal=self.format_check(Format.objects.get(name=legacy)),vintage_legal=self.format_check(Format.objects.get(name=vintage)),modern_legal=self.format_check(Format.objects.get(name=modern)),standard_legal=self.format_check(Format.objects.get(name=standard)),commander_legal=self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all())
+        publishedDeck = PublishedDeck(legacy_legal=self.format_check(Format.objects.get(name=legacy)),vintage_legal=self.format_check(Format.objects.get(name=vintage)),modern_legal=self.format_check(Format.objects.get(name=modern)),standard_legal=self.format_check(Format.objects.get(name=standard)),commander_legal=self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all(),sb_counts=self.sb_counts.objects.all())
         publishedDeck.save()
         breakdown = Card_Breakdown()
         breakdown.initialize(publishedDeck)
@@ -321,7 +321,9 @@ class Card_Breakdown(models.Model):
     deck = models.ForeignKey('mainsite.PublishedDeck')
     #Sub_decks to add
     
-    
+    def __unicode__(self):
+        return self.deck.name
+
     def initialize(self, deck):
         super(Card_Breakdown,self).__init__()
         self.number_of_cards=0
@@ -436,14 +438,41 @@ class Card_Breakdown(models.Model):
         curve[0] -= self.land_count
         #get number of cards
         self.mana_curve=str(curve).strip('[]')
+        if type(deck) is Deck:
+            new = PublishedDeck(name=deck.name,user=deck.user,published=datetime.now(),description='',score=0)
+            new.save()
+            for count in deck.card_counts.all():
+                new_count = CardCount(card=count.card, multiplicity=count.multiplicity)
+                new_count.save()
+                new.card_counts.add(new_count)
+            new.save()
+            for count in deck.sb_counts.all():
+                new_count = CardCount(card=count.card, multiplicity=count.multiplicity)
+                new_count.save()
+                new.sb_counts.add(new_count)
+            new.save()
+            standard = Format.objects.filter(name='standard')[0]
+            modern = Format.objects.filter(name='modern')[0]
+            legacy = Format.objects.filter(name='legacy')[0]
+            vintage = Format.objects.filter(name='vintage')[0]
+            commander = Format.objects.filter(name='commander')[0]
+            breakdown = Card_Breakdown(deck=new, number_of_cards=0)
+            breakdown.initialize(new)
+            breakdown.save()
+            new.standard_legal = standard.legal(deck)
+            new.modern_legal = modern.legal(deck)
+            new.legacy_legal = legacy.legal(deck)
+            new.vintage_legal = vintage.legal(deck)
+            new.commander_legal = commander.legal(deck)
+            new.save()
+            deck = new
         self.deck=deck
 
 class Archetype(models.Model):
     colors = models.CharField(max_length=200)
     format = models.CharField(max_length=200)
     lands = models.IntegerField(default=0)
-    curve = models.CommaSeparatedIntegerField(max_length=1000, default='0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0')
-    basicLands = models.CommaSeparatedIntegerField(max_length=500, default='0, 0, 0, 0, 0')
+    curve = models.CommaSeparatedIntegerField(max_length=500, default='0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0')
     numDecks = models.IntegerField(default=0)
     cards = models.ManyToManyField('mainsite.Card')
 
@@ -451,62 +480,84 @@ class Archetype(models.Model):
         return self.format + ': ' + self.colors
 
     def update(self, deck):
+        deckCopy = deck
+        deckCopy.pk = None
+        deck = deckCopy
+        deck.card_counts.add(CardCount(card=Card.objects.filter(name='Forest')[0],multiplicity=60))
         breakdown = Card_Breakdown()
-        breakdown.save()
         breakdown.initialize(deck)
         breakdown.save()
         if (breakdown.white > 0 and not 'W' in self.colors.upper()) or (breakdown.blue > 0 and not 'U' in self.colors.upper()) or (breakdown.black > 0 and not 'B' in self.colors.upper()) or (breakdown.red > 0 and not 'R' in self.colors.upper()) or (breakdown.green > 0 and not 'G' in self.colors.upper()):
             return
         self.numDecks += 1
         self.lands += breakdown.land_count
-        newCurve = list(breakdown.curve)
-        curve = list(self.curve)
+        newCurve = breakdown.mana_curve.split(', ')
         for i in xrange(len(newCurve)):
+            if type(newCurve[i]) is unicode:
+                newCurve[i] = unicodedata.normalize('NFKD', newCurve[i]).encode('ascii','ignore')
+            newCurve[i] = int(newCurve[i])
+        print newCurve
+        curve = self.curve.split(', ')
+        for i in xrange(len(curve)):
+            if type(curve[i]) is unicode:
+                curve[i] = unicodedata.normalize('NFKD', curve[i]).encode('ascii','ignore')
+            curve[i] = int(curve[i])
+        print curve
+        for i in xrange(len(curve)):
             curve[i] += newCurve[i]
         self.curve = str(curve).strip('[]')
-        for card_count in deck:
+        for card_count in deck.card_counts.all():
             if not self.cards.filter(pk=card_count.card.pk):
                 self.cards.add(card_count.card)
         self.save()
 
     def recommend(self, deck):
+
         breakdown = Card_Breakdown()
-        breakdown.save()
         breakdown.initialize(deck)
         breakdown.save()
         if (breakdown.white == 0 and 'W' in self.colors.upper()) or (breakdown.blue == 0 and 'U' in self.colors.upper()) or (breakdown.black == 0 and 'B' in self.colors.upper()) or (breakdown.red == 0 and 'R' in self.colors.upper()) or (breakdown.green == 0 and 'G' in self.colors.upper()):
             return Recommendation()
         ret = Recommendation()
-        if self.lands // self.numDecks > breakdown.land_count:
-            lands = self.lands // self.numDecks - breakdown.land_count
-            mana = breakdown.white_mana + breakdown.blue_mana + breakdown.black_mana + breakdown.red_mana + breakdown.green_mana
-            if mana:
-                ret.plains = int(lands*white_mana/mana)
-                ret.islands = int(lands*blue_mana/mana)
-                ret.swamps = int(lands*black_mana/mana)
-                ret.mountains = int(lands*red_mana/mana)
-                ret.forests = int(lands*green_mana/mana)
-            difference = lands - (ret.plains + ret.islands + ret.swamps + ret.mountains + ret.forests)
-            while difference:
-                if breakdown.white and difference:
-                    ret.plains += 1
-                    difference -= 1
-                if breakdown.blue and difference:
-                    ret.islands += 1
-                    difference -= 1
-                if breakdown.black and difference:
-                    ret.swamps += 1
-                    difference -= 1
-                if breakdown.red and difference:
-                    ret.mountains += 1
-                    difference -= 1
-                if breakdown.green and difference:
-                    ret.forests += 1
-                    difference -= 1
-        curve = list(breakdown.mana_curve)
-        suggestedCurve = list(self.curve)
+        if self.numDecks > 0:
+            if self.lands // self.numDecks > breakdown.land_count:
+                lands = self.lands // self.numDecks - breakdown.land_count
+                mana = breakdown.white_mana + breakdown.blue_mana + breakdown.black_mana + breakdown.red_mana + breakdown.green_mana
+                if mana:
+                    ret.plains = int(lands*breakdown.white_mana//mana)
+                    ret.islands = int(lands*breakdown.blue_mana//mana)
+                    ret.swamps = int(lands*breakdown.black_mana//mana)
+                    ret.mountains = int(lands*breakdown.red_mana//mana)
+                    ret.forests = int(lands*breakdown.green_mana//mana)
+                difference = lands - (ret.plains + ret.islands + ret.swamps + ret.mountains + ret.forests)
+                while difference:
+                    if breakdown.white and difference:
+                        ret.plains += 1
+                        difference -= 1
+                    if breakdown.blue and difference:
+                        ret.islands += 1
+                        difference -= 1
+                    if breakdown.black and difference:
+                        ret.swamps += 1
+                        difference -= 1
+                    if breakdown.red and difference:
+                        ret.mountains += 1
+                        difference -= 1
+                    if breakdown.green and difference:
+                        ret.forests += 1
+                        difference -= 1
+        curve = breakdown.mana_curve.split(', ')
         for i in xrange(len(curve)):
-            if curve[i] < suggestedCurve[i] // self.numDecks:
+            if type(curve[i]) is unicode:
+                curve[i] = unicodedata.normalize('NFKD', curve[i]).encode('ascii','ignore')
+            curve[i] = int(curve[i])
+        suggestedCurve = self.curve.split(', ')
+        for i in xrange(len(suggestedCurve)):
+            if type(suggestedCurve[i]) is unicode:
+                suggestedCurve[i] = unicodedata.normalize('NFKD', suggestedCurve[i]).encode('ascii','ignore')
+            suggestedCurve[i] = int(suggestedCurve[i])
+        for i in xrange(len(curve)):
+            if self.numDecks > 0 and curve[i] < suggestedCurve[i] // self.numDecks:
                 ret.cards |= self.cards.filter(cmc=i)
         return ret
 

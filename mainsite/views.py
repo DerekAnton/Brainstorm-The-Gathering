@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.hashers import make_password
-from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set, Card_Breakdown, Format
+from mainsite.models import Card, Deck, PublishedDeck, CardCount, Card, FavoriteCard, Comment, Collection, Set, Card_Breakdown, Format, Archetype, Recommendation
 from bs4 import BeautifulSoup
 import requests
 import random
@@ -113,6 +113,7 @@ def decks(request):
     collection = request.GET.get('collection')
     selected = request.GET.get('deck')
     #addCard = request.GET.get('addCard')
+    rec = request.GET.get('recommend')
     removeCard = request.GET.get('removeCard')
     removeCardSb = request.GET.get('removeCardSb')
     decriment = request.GET.get('decriment')
@@ -131,7 +132,11 @@ def decks(request):
     rename = request.GET.get('rename')
     deck = None
 
-
+    if rec:
+        results = set([])
+        for arch in Archetype.objects.all():
+            recommendaton = arch.recommend(Deck.objects.filter(pk=rec)[0])
+            results |= recommendaton.cards
     if Collection.objects.all().filter(user=request.user):
         userCollection = Collection.objects.all().filter(user=request.user)[0]
     else:

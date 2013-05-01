@@ -18,36 +18,40 @@ for w in ['', 'W']:
 		for b in ['', 'B']:
 			for r in ['', 'R']:
 				for g in ['', 'G']:
-					new = Archetype(colors=w+u+b+r+g, format='Standard')
-					new.save()
-					standard.append(new) 
+					arc, new = Archetype.objects.get_or_create(colors=w+u+b+r+g, format='Standard')
+					if new:
+						arc.save()
+					standard.append(arc) 
 modern = []
 for w in ['', 'W']:
 	for u in ['', 'U']:
 		for b in ['', 'B']:
 			for r in ['', 'R']:
 				for g in ['', 'G']:
-					new = Archetype(colors=w+u+b+r+g, format='Modern')
-					new.save()
-					modern.append(new)
+					arc, new = Archetype.objects.get_or_create(colors=w+u+b+r+g, format='Modern')
+					if new:
+						arc.save()
+					modern.append(arc)
 legacy = []
 for w in ['', 'W']:
 	for u in ['', 'U']:
 		for b in ['', 'B']:
 			for r in ['', 'R']:
 				for g in ['', 'G']:
-					new = Archetype(colors=w+u+b+r+g, format='Legacy')
-					new.save()
-					legacy.append(new)
+					arc, new = Archetype.objects.get_or_create(colors=w+u+b+r+g, format='Legacy')
+					if new:
+						arc.save()
+					legacy.append(arc)
 vintage = []
 for w in ['', 'W']:
 	for u in ['', 'U']:
 		for b in ['', 'B']:
 			for r in ['', 'R']:
 				for g in ['', 'G']:
-					new = Archetype(colors=w+u+b+r+g, format='Vintage')
-					new.save()
-					vintage.append(new)
+					arc, new = Archetype.objects.get_or_create(colors=w+u+b+r+g, format='Vintage')
+					if new:
+						arc.save()
+					vintage.append(arc)
 '''commander = []
 for w in ['', 'W']:
 	for u in ['', 'U']:
@@ -56,6 +60,7 @@ for w in ['', 'W']:
 				for g in ['', 'G']:
 					commander.append(Archetype(colors=w+u+b+r+g, format='Commander'))'''
 for deck in PublishedDeck.objects.filter(user=User.objects.filter(username='admin')[0]):
+	print deck.name
 	if deck.standard_legal:
 		for archetype in standard:
 			archetype.update(deck)

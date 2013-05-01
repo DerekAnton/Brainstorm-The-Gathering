@@ -45,7 +45,11 @@
       </form>
 <!--	<input type="hidden" name="recommend" value="1">
 	<input type="hidden" name="deck" value={{deck.pk}}> -->
-	<button class="btn" type="submit">Recommend</button>
+  {% if deck %}
+  <form>
+	<button class="btn" type="submit" name="recommend" value="{{deck.pk}}">Recommend</button>
+</form>
+  {% endif %}
       <div class="well sidebar-nav"> 
         <ul class="nav nav-list">  
           <li class="nav-header">My Collection</li>

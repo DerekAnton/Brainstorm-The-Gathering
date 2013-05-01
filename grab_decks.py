@@ -40,7 +40,7 @@ for format in ['standard', 'legacy', 'modern', 'vintage']:
             print("\tAlready Created")
         except:
             pass
-        deck = PublishedDeck(name=title,published=datetime.now(),score=0,user=user)
+        deck = PublishedDeck(name=format+': ' + title,published=datetime.now(),score=0,user=user)
         deck.save()
         wrapper = soup2.find('div', {'class': 'deck_card_wrapper'})
         matches = [match.search(li.text) for li in wrapper.findAll('li')]
