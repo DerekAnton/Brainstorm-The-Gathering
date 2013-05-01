@@ -134,7 +134,35 @@ def decks(request):
 
     if rec:
         results = set([])
-        for arch in Archetype.objects.all():
+        deck = Deck.objects.filter(pk=rec)[0]
+        breakdown = Card_Breakdown()
+        breakdown.initialize(deck)
+        breakdown.save()
+        standard = Format.objects.filter(name='standard')[0]
+        modern = Format.objects.filter(name='modern')[0]
+        legacy = Format.objects.filter(name='legacy')[0]
+        vintage = Format.objects.filter(name='vintage')[0]
+        format = ''
+        if not standard.legal(deck):
+            format = 'standard'
+        elif not modern.legal(deck):
+            format = 'modern'
+        elif not legacy.legal(deck):
+            format = 'legacy'
+        elif not vintage.legal(deck):
+            format = 'vintage'
+        colors = ''
+        if breakdown.white > 0:
+            colors += 'W'
+        if breakdown.blue > 0:
+            colors += 'U'
+        if breakdown.black > 0:
+            colors += 'B'
+        if breakdown.red > 0:
+            colors += 'R'
+        if breakdown.green > 0:
+            colors += 'G'
+        for arch in Archetype.objects.filter(format=format, colors=colors):
             recommendaton = arch.recommend(Deck.objects.filter(pk=rec)[0])
             results |= recommendaton.cards
     if Collection.objects.all().filter(user=request.user):
@@ -224,14 +252,14 @@ def decks(request):
             legacy = Format.objects.filter(name='legacy')[0]
             vintage = Format.objects.filter(name='vintage')[0]
             commander = Format.objects.filter(name='commander')[0]
-            breakdown = Card_Breakdown(deck=new, number_of_cards=0)
+            breakdown = Card_Breakdown()
             breakdown.initialize(new)
             breakdown.save()
-            new.standard_legal = standard.legal(deck)
-            new.modern_legal = modern.legal(deck)
-            new.legacy_legal = legacy.legal(deck)
-            new.vintage_legal = vintage.legal(deck)
-            new.commander_legal = commander.legal(deck)
+            new.standard_legal = not standard.legal(deck)
+            new.modern_legal = not modern.legal(deck)
+            new.legacy_legal = not legacy.legal(deck)
+            new.vintage_legal = not vintage.legal(deck)
+            new.commander_legal = not commander.legal(deck)
             new.save()
     elif collectionAdd:
         card = Card.objects.all().get(pk=collectionAdd)
@@ -338,7 +366,7 @@ def published(request, deck_id):
 
 
 
-    curve = Card_Breakdown.objects.filter(deck=deck)[0].mana_curve
+    curve = Card_Breakdown.objects.filter(deck=str(type(deck))+str(deck.pk))[0].mana_curve
     curve = curve.split(', ')
     creatures = []
     lands = []
@@ -357,19 +385,24 @@ def published(request, deck_id):
                 spells.append(card_count)
             else:
                 perm.append(card_count)
+    standard = Format.objects.filter(name='standard')[0]
+    modern = Format.objects.filter(name='modern')[0]
+    legacy = Format.objects.filter(name='legacy')[0]
+    vintage = Format.objects.filter(name='vintage')[0]
+    commander = Format.objects.filter(name='commander')[0]
     context = {
-        'standard':deck.standard_legal,
-        'modern':deck.modern_legal,
-        'legacy':deck.legacy_legal,
-        'vintage':deck.vintage_legal,
-        'commander':deck.commander_legal,
+        'standard':standard.legal(deck),
+        'modern':modern.legal(deck),
+        'legacy':legacy.legal(deck),
+        'vintage':vintage.legal(deck),
+        'commander':commander.legal(deck),
         #'curvelength':curvelength,
         #'manacurve':manacurve,
         'creatures':creatures,
         'lands':lands,
         'spells':spells,
         'perm':perm,
-        'breakdown':Card_Breakdown.objects.filter(deck=deck)[0],
+        'breakdown':Card_Breakdown.objects.filter(deck=str(type(deck))+str(deck.pk))[0],
         'user':request.user, 
         'description': deck.description, 
         'deck':deck,

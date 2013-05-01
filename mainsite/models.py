@@ -77,32 +77,32 @@ class Format(models.Model):
         for card_count in deck.card_counts.all():
             numCards += card_count.multiplicity
             if self.checkCard(card_count.card) == 'Banned':
-                return False
+                return card_count.card.name + ' is banned in ' + self.name
             if self.checkCard(card_count.card) == 'Restricted' and card_count.multiplicity > 1 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
-                return False
+                return card_count.card.name + ' is restricted in ' + self.name + ', but there is a copy in the maindeck'
             if card_count.multiplicity > 4 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
-                return False
+                return 'There are more than 4 copies of ' + card_count.name + ' in the deck'
         if numCards < 60:
-            return False
+            return 'There must be at least 60 cards in the main deck'
         if self.name == 'commander' and numCards != 100:
-            return False
+            return 'Commander requires exactly 100 cards in a deck'
         numCards = 0
         for card_count in deck.sb_counts.all():
             numCards += card_count.multiplicity
             if self.checkCard(card_count.card) == 'Banned':
-                return False
+                return card_count.card.name + ' is banned in ' + self.name + ', but there is a copy in the sideboard'
             if self.checkCard(card_count.card) == 'Restricted' and card_count.multiplicity > 1 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
-                return False
+                return card_count.card.name + ' is restricted in ' + self.name + ', but there is more than one copy in the sideboard'
             if card_count.multiplicity > 4 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
-                return False
+                return 'There are more than 4 copies of ' + card_count.card.name + ' in the sideboard'
             if deck.card_counts.filter(card=card_count.card):
                 if deck.card_counts.get(card=card_count.card).multiplicity + card_count.multiplicity > 4 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
-                    return False
+                    return 'There are more than 4 copies of ' + card_count.card.name + ' between the maindeck and the sideboard'
                 if self.checkCard(card_count.card) == 'Restricted' and deck.card_counts.get(card=card_count.card).multiplicity + card_count.multiplicity > 1 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
-                    return False
+                    return card_count.card.name + ' is restricted in ' + self.name
         if numCards == 0 or numCards == 15:
-            return True
-        return False
+            return False
+        return 'Sideboards need to have exactly 0 or 15 cards'
 
 class Set(models.Model):
     name = models.CharField(max_length=200)
@@ -154,7 +154,7 @@ class Deck(models.Model):
         return self.name
 
     def publish(self):
-        publishedDeck = PublishedDeck(legacy_legal=self.format_check(Format.objects.get(name=legacy)),vintage_legal=self.format_check(Format.objects.get(name=vintage)),modern_legal=self.format_check(Format.objects.get(name=modern)),standard_legal=self.format_check(Format.objects.get(name=standard)),commander_legal=self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all(),sb_counts=self.sb_counts.objects.all())
+        publishedDeck = PublishedDeck(legacy_legal=not self.format_check(Format.objects.get(name=legacy)),vintage_legal=not self.format_check(Format.objects.get(name=vintage)),modern_legal=not self.format_check(Format.objects.get(name=modern)),standard_legal=not self.format_check(Format.objects.get(name=standard)),commander_legal=not self.format_check(Format.objects.get(name=commander)),score=0,user=self.user,published=datetime.now(EST()),description=self.description,card_counts=self.card_counts.objects.all(),sb_counts=self.sb_counts.objects.all())
         publishedDeck.save()
         breakdown = Card_Breakdown()
         breakdown.initialize(publishedDeck)
@@ -318,7 +318,7 @@ class Card_Breakdown(models.Model):
     #MAPPING FOR MANA_CURVE
     mana_curve = models.CommaSeparatedIntegerField(max_length=500, default='0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0')
 
-    deck = models.ForeignKey('mainsite.PublishedDeck')
+    deck = models.CharField(max_length=500,default='')
     #Sub_decks to add
     
     def __unicode__(self):
@@ -438,7 +438,7 @@ class Card_Breakdown(models.Model):
         curve[0] -= self.land_count
         #get number of cards
         self.mana_curve=str(curve).strip('[]')
-        if type(deck) is Deck:
+        '''if type(deck) is Deck:
             new = PublishedDeck(name=deck.name,user=deck.user,published=datetime.now(),description='',score=0)
             new.save()
             for count in deck.card_counts.all():
@@ -465,8 +465,8 @@ class Card_Breakdown(models.Model):
             new.vintage_legal = vintage.legal(deck)
             new.commander_legal = commander.legal(deck)
             new.save()
-            deck = new
-        self.deck=deck
+            deck = new'''
+        self.deck=str(type(deck))+str(deck.pk)
 
 class Archetype(models.Model):
     colors = models.CharField(max_length=200)
@@ -480,9 +480,6 @@ class Archetype(models.Model):
         return self.format + ': ' + self.colors
 
     def update(self, deck):
-        deckCopy = deck
-        deckCopy.pk = None
-        deck = deckCopy
         deck.card_counts.add(CardCount(card=Card.objects.filter(name='Forest')[0],multiplicity=60))
         breakdown = Card_Breakdown()
         breakdown.initialize(deck)
@@ -512,7 +509,6 @@ class Archetype(models.Model):
         self.save()
 
     def recommend(self, deck):
-
         breakdown = Card_Breakdown()
         breakdown.initialize(deck)
         breakdown.save()
