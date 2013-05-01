@@ -165,7 +165,7 @@
       {% endfor %}
     </ul>
   </div><!--/.well -->
-
+{% if user.is_authenticated %}
   <form>
     <input type="hidden" name="deck" value={{deck.pk}}>
     <input type="hidden" name="grabDeck" value="1">
@@ -178,6 +178,7 @@
     <input type="hidden" name="user" value={{user.username}}>
     <button class="btn" type="submit">Add Comment!</button>
   </form>
+{% endif %}
   <ul id="comment_list">
     {% for comment in comments.all %}
     <li><b>{{comment.user}}</b> ({{ comment.timestamp }}): {{ comment.message }}</li>

@@ -46,7 +46,9 @@
 	{{legacy}} in Legacy<br>
 	{{vintage}} in Vintage<br>
 	{{commander}} in Commander<br>
+	{% if user.is_authenticated %}
 	<a href="/favorite/{{card.name}}">Make favorite</a><br>
+	{% endif %}
 	<a id="purchase_link" href="{{ price_url }}">Purchase Card</a>
 	<div id="average_price">Estimated Price Range: </div>
 	<script src="/static/bootstrap/docs/assets/js/jquery.js"></script>
