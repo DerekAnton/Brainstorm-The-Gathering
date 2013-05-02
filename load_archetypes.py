@@ -62,22 +62,22 @@ for w in ['', 'W']:
 					commander.append(Archetype(colors=w+u+b+r+g, format='Commander'))'''
 for deck in PublishedDeck.objects.filter(user=User.objects.filter(username='admin')[0]):
 	print deck.name
-	if not deck.standard_legal and 'standard' in deck.name:
+	if deck.standard_legal and 'standard' in deck.name:
 		print 'standard'
 		for archetype in standard:
 			archetype.update(deck)
 			archetype.save()
-	elif not deck.modern_legal and 'modern' in deck.name:
+	elif deck.modern_legal and 'modern' in deck.name:
 		print 'modern'
 		for archetype in modern:
 			archetype.update(deck)
 			archetype.save()
-	elif not deck.legacy_legal and 'legacy' in deck.name:
+	elif deck.legacy_legal and 'legacy' in deck.name:
 		print 'legacy'
 		for archetype in legacy:
 			archetype.update(deck)
 			archetype.save()
-	elif not deck.vintage_legal and 'vintage' in deck.name:
+	elif deck.vintage_legal and 'vintage' in deck.name:
 		print 'vintage'
 		for archetype in vintage:
 			archetype.update(deck)
