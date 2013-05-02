@@ -79,9 +79,9 @@ class Format(models.Model):
             if self.checkCard(card_count.card) == 'Banned':
                 return card_count.card.name + ' is banned in ' + self.name
             if self.checkCard(card_count.card) == 'Restricted' and card_count.multiplicity > 1 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
-                return card_count.card.name + ' is restricted in ' + self.name + ', but there is a copy in the maindeck'
+                return card_count.card.name + ' is restricted in ' + self.name + ', but there is more than one copy in the maindeck'
             if card_count.multiplicity > 4 and not card_count.card.super_typing.filter(name='Basic') and not card_count.card.name == 'Relentless Rats':
-                return 'There are more than 4 copies of ' + card_count.name + ' in the deck'
+                return 'There are more than 4 copies of ' + card_count.card.name + ' in the deck'
         if numCards < 60:
             return 'There must be at least 60 cards in the main deck'
         if self.name == 'commander' and numCards != 100:
