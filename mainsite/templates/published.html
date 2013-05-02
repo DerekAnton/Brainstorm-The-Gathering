@@ -187,23 +187,30 @@
 
 </div><!--/span-->
 <div class="span8">
-  {% if standard %}
+  {% if not standard %}
   Legal in Standard<br>
+  {% else %}
+  Not Standard legal: {{standard}}<br>
   {% endif %}
-  {% if modern %}
+  {% if not modern %}
   Legal in Modern<br>
+  {% else %}
+  Not Modern legal: {{modern}}<br>
   {% endif %}
-  {% if legacy %}
+  {% if not legacy %}
   Legal in Legacy<br>
+  {% else %}
+  Not Legacy legal: {{legacy}}<br>
   {% endif %}
-  {% if vintage %}
+  {% if not vintage %}
   Legal in Vintage<br>
+  {% else %}
+  Not Vintage legal: {{vintage}}<br>
   {% endif %}
-  {% if commander %}
+  {% if not commander %}
   Legal in Commander<br>
-  {% endif %}
-  {% if not standard and not modern and not legacy and not vintage and not commander %}
-  Not legal in Standard, Modern, Legacy, Vintage or Commander<br>
+  {% else %}
+  Not Commander legal: {{commander}}<br>
   {% endif %}
   <div id="color_div" style="width:400; height:300"></div>
   <div id="types_div" style="width:400; height:300"></div>

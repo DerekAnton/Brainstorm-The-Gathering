@@ -480,7 +480,6 @@ class Archetype(models.Model):
         return self.format + ': ' + self.colors
 
     def update(self, deck):
-        deck.card_counts.add(CardCount(card=Card.objects.filter(name='Forest')[0],multiplicity=60))
         breakdown = Card_Breakdown()
         breakdown.initialize(deck)
         breakdown.save()

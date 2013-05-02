@@ -143,13 +143,17 @@ def decks(request):
         legacy = Format.objects.filter(name='legacy')[0]
         vintage = Format.objects.filter(name='vintage')[0]
         format = ''
-        if not standard.legal(deck):
+        _standard = standard.legal(deck)
+        _modern = modern.legal(deck)
+        _legacy = legacy.legal(deck)
+        _vintage = vintage.legal(deck)
+        if not _standard or _standard == 'There must be at least 60 cards in the main deck':
             format = 'standard'
-        elif not modern.legal(deck):
+        elif not _modern or _modern == 'There must be at least 60 cards in the main deck':
             format = 'modern'
-        elif not legacy.legal(deck):
+        elif not _legacy or _legacy == 'There must be at least 60 cards in the main deck':
             format = 'legacy'
-        elif not vintage.legal(deck):
+        elif not _vintage or _vintage == 'There must be at least 60 cards in the main deck':
             format = 'vintage'
         colors = ''
         if breakdown.white > 0:
