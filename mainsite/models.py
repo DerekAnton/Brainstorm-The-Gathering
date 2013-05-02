@@ -483,6 +483,7 @@ class Archetype(models.Model):
         breakdown = Card_Breakdown()
         breakdown.initialize(deck)
         breakdown.save()
+        #print '\n\n\n\n' + str(breakdown.white) + str(breakdown.blue) + str(breakdown.black) + str(breakdown.red) + str(breakdown.green) + '\n\n\n\n'
         if (breakdown.white > 0 and not 'W' in self.colors.upper()) or (breakdown.blue > 0 and not 'U' in self.colors.upper()) or (breakdown.black > 0 and not 'B' in self.colors.upper()) or (breakdown.red > 0 and not 'R' in self.colors.upper()) or (breakdown.green > 0 and not 'G' in self.colors.upper()):
             return
         self.numDecks += 1
@@ -492,20 +493,17 @@ class Archetype(models.Model):
             if type(newCurve[i]) is unicode:
                 newCurve[i] = unicodedata.normalize('NFKD', newCurve[i]).encode('ascii','ignore')
             newCurve[i] = int(newCurve[i])
-        print newCurve
         curve = self.curve.split(', ')
         for i in xrange(len(curve)):
             if type(curve[i]) is unicode:
                 curve[i] = unicodedata.normalize('NFKD', curve[i]).encode('ascii','ignore')
             curve[i] = int(curve[i])
-        print curve
         for i in xrange(len(curve)):
             curve[i] += newCurve[i]
         self.curve = str(curve).strip('[]')
         for card_count in deck.card_counts.all():
             if not self.cards.filter(pk=card_count.card.pk):
                 self.cards.add(card_count.card)
-        self.save()
 
     def recommend(self, deck):
         breakdown = Card_Breakdown()
@@ -514,6 +512,7 @@ class Archetype(models.Model):
         if (breakdown.white == 0 and 'W' in self.colors.upper()) or (breakdown.blue == 0 and 'U' in self.colors.upper()) or (breakdown.black == 0 and 'B' in self.colors.upper()) or (breakdown.red == 0 and 'R' in self.colors.upper()) or (breakdown.green == 0 and 'G' in self.colors.upper()):
             return Recommendation()
         ret = Recommendation()
+        print '\n\n\n\n' + str(self.curve) + '\n\n\n\n'
         if self.numDecks > 0:
             if self.lands // self.numDecks > breakdown.land_count:
                 lands = self.lands // self.numDecks - breakdown.land_count
@@ -552,8 +551,18 @@ class Archetype(models.Model):
                 suggestedCurve[i] = unicodedata.normalize('NFKD', suggestedCurve[i]).encode('ascii','ignore')
             suggestedCurve[i] = int(suggestedCurve[i])
         for i in xrange(len(curve)):
+            #print str(i) + ': ' + str(curve[i]) + ', ' + str(suggestedCurve[i] // self.numDecks)
+            #print self.numDecks
             if self.numDecks > 0 and curve[i] < suggestedCurve[i] // self.numDecks:
-                ret.cards |= self.cards.filter(cmc=i)
+                for card in self.cards.filter(cmc=i):
+                    #if i == 5:
+                    #    print card.name
+                    ret.cards.add(card)
+        '''for card in ret.cards:
+            if card.name == 'Black Lotus':
+                print card.name
+            if card.name == 'Time Walk':
+                print card.name'''
         return ret
 
 class Recommendation():

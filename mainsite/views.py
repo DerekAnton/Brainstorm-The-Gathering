@@ -23,11 +23,11 @@ def index(request):
 
     top = soup.find('div', id="dynamicpage_standard_list").findAll('p')[0].a['href']
 
-    #table = BeautifulSoup(requests.get(top).text).find('section', id="content").table
-    #rows = ['<a href="%s">%s</a>' % (row.a['href'], row.strong.text) for row in table.findAll('tr')[5:13]] 
+    table = BeautifulSoup(requests.get(top.replace('\r\n','')).text).find('section', id="content").table
+    rows = ['<a href="%s">%s</a>' % (row.a['href'], row.strong.text) for row in table.findAll('tr')[5:13]] 
 
     recent = PublishedDeck.objects.all().order_by('-published')
-    #context = {'user': request.user, 'rows':rows, 'recent':recent}
+    context = {'user': request.user, 'rows':rows, 'recent':recent}
     context = {'user': request.user, 'recent':recent}
     return render_to_response('home.html', context)
 
@@ -131,7 +131,18 @@ def decks(request):
     query = request.GET.get('query')
     rename = request.GET.get('rename')
     deck = None
+    plains = 0
+    islands = 0
+    swamps = 0
+    mountains = 0
+    forests = 0
 
+    if query:
+        results = set([])
+        for card in SearchQuerySet().models(Card).filter(content=query):
+            results.add(card.object)
+    else:
+        results = 'none'
     if rec:
         results = set([])
         deck = Deck.objects.filter(pk=rec)[0]
@@ -148,13 +159,13 @@ def decks(request):
         _legacy = legacy.legal(deck)
         _vintage = vintage.legal(deck)
         if not _standard or _standard == 'There must be at least 60 cards in the main deck':
-            format = 'standard'
+            format = 'Standard'
         elif not _modern or _modern == 'There must be at least 60 cards in the main deck':
-            format = 'modern'
+            format = 'Modern'
         elif not _legacy or _legacy == 'There must be at least 60 cards in the main deck':
-            format = 'legacy'
+            format = 'Legacy'
         elif not _vintage or _vintage == 'There must be at least 60 cards in the main deck':
-            format = 'vintage'
+            format = 'Vintage'
         colors = ''
         if breakdown.white > 0:
             colors += 'W'
@@ -169,6 +180,15 @@ def decks(request):
         for arch in Archetype.objects.filter(format=format, colors=colors):
             recommendaton = arch.recommend(Deck.objects.filter(pk=rec)[0])
             results |= recommendaton.cards
+            plains = recommendaton.plains
+            islands = recommendaton.islands
+            swamps = recommendaton.swamps
+            mountains = recommendaton.mountains
+            forests = recommendaton.forests
+        if not results:
+            results = 'none'
+            #for card in results:
+            #    print card
     if Collection.objects.all().filter(user=request.user):
         userCollection = Collection.objects.all().filter(user=request.user)[0]
     else:
@@ -296,10 +316,6 @@ def decks(request):
         count = CardCount.objects.all().get(pk=sbSet)
         count.multiplicity = sbMultiplicity
         count.save()
-    if query:
-        results = SearchQuerySet().models(Card).filter(content=query)
-    else:
-        results = ''
     if delete_deck and Deck.objects.all().filter(pk=delete_deck):
         if (Deck.objects.all().get(pk=delete_deck).user == request.user):
             Deck.objects.all().get(pk=delete_deck).delete()
@@ -327,6 +343,11 @@ def decks(request):
             else:
                 perm.append(card_count)
     context = {
+            'plains':plains,
+            'islands':islands,
+            'swamps':swamps,
+            'mountains':mountains,
+            'forests':forests,
             'creatures':creatures,
             'lands':lands,
             'spells':spells,

@@ -89,15 +89,32 @@
         {% if deck %}
         <input type="hidden" name="deck" value={{deck.pk}}>
         {% endif %}
-        {% if results %}
-        <input type="hidden" name="collection" value={{collection.pk}}>  
+        {% if plains %}
+        {{plains}} Plains<br>
         {% endif %}
+        {% if islands %}
+        {{islands}} islands<br>
+        {% endif %}
+        {% if swamps %}
+        {{swamps}} swamps<br>
+        {% endif %}
+        {% if mountains %}
+        {{mountains}} mountains<br>
+        {% endif %}
+        {% if forests %}
+        {{forests}} forests<br>
+        {% endif %}
+        {% if results == 'none' %}
+        No results
+        {% elif results %}
+        <input type="hidden" name="collection" value={{collection.pk}}>  
         {% for card in results %}
         {% if deck %}
-        <button id="addCard" class="btn btn-mini" type="submit" name="deckAdd" value="{{card.object.pk}}">+Deck</button>
-        <button id="addCard" class="btn btn-mini" type="submit" name="sbAdd" value="{{card.object.pk}}">+Sideboard</button>
-        {% endif %}<button class="btn btn-mini" type="submit" name="collectionAdd" value="{{card.object.pk}}">+Collection</button><a href="{{card.object.get_absolute_url}}">{{ card.object.name }}</a> <br>
+        <button id="addCard" class="btn btn-mini" type="submit" name="deckAdd" value="{{card.pk}}">+Deck</button>
+        <button id="addCard" class="btn btn-mini" type="submit" name="sbAdd" value="{{card.pk}}">+Sideboard</button>
+        {% endif %}<button class="btn btn-mini" type="submit" name="collectionAdd" value="{{card.pk}}">+Collection</button><a href="{{card.get_absolute_url}}">{{ card.name }}</a> <br>
         {% endfor %}
+        {% endif %}
       </form>
     </div>
       <div class="span4">
